@@ -18,11 +18,11 @@ namespace Q4u
         /// <summary>
         /// Activates the link
         /// </summary>
-        void Enable();
+        void Enable() { }
 
         /// <summary>
         /// Deactivates the link
         /// </summary>
-        void Disable();
+        void Disable() { }
     }
 }
