@@ -37,7 +37,7 @@ public class TouchManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        touchPositionAction = plyerControls.FindActionMap(actionMapName).FindAction(touchPosition);
+        touchPositionAction = plyerControls.FindActionMap(actionMapName).FindAction(PrimaryContact);
         touchPressAction = plyerControls.FindActionMap(actionMapName).FindAction(touchPress);
         TouchPressed();
     }
