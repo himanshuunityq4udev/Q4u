@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
+
 public class DataSaver : MonoBehaviour
 {
     public static string GetFilePath(string dataFileName)
@@ -151,7 +152,6 @@ public class DataSaver : MonoBehaviour
 public class PlayerInformation
 {
     public int money;
-
 }
 
 // Custom exception for data deletion errors

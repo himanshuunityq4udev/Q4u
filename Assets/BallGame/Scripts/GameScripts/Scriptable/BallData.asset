@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05f64bf8146704b928293884ad496fb5, type: 3}
+  m_Name: BallData
+  m_EditorClassIdentifier: 
+  balls:
+  - {fileID: 5805473225970307826, guid: c5e485128fe1a482098c0747b81eea0d, type: 3}
+  - {fileID: 3571709254318483953, guid: 6fc6d84620e5d4b6082f9e399d2f95f3, type: 3}
+  - {fileID: 6097808452608734396, guid: 5115a45ca00564062bf249de59dbc5eb, type: 3}
+  - {fileID: 6505871801882956984, guid: db161e22c830f4f6eb5fbc3c5f2bd64e, type: 3}
+  - {fileID: 4440616833400378149, guid: 12428c496184b41c79d39d64396e7933, type: 3}
+  - {fileID: 8154828278473830413, guid: 84416a7453c14451597d901656091a4c, type: 3}
+  unlockedBalls: 010000000000
+  ballPrice: 0a000000140000001e0000002800000032000000

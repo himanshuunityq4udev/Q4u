@@ -23,18 +23,12 @@ public class BallPlayerController : MonoBehaviour
     private Health ballHealth;
 
     public GameObject uI;
-   // public GameObject lives;
 
-   // public GameObject GameOverPanel;
-
-    // Swipe threshold values
     public float swipeDistanceThreshold = 20;  // Minimum distance for a swipe in units
     public float swipeTimeThreshold = 0.5f;
 
-    //public float swipeSpeed = 15f;
     [SerializeField] private float m_MaxAngularVelocity = 25;
-   // private const float k_GroundRayLength = 1f; 
-    //bool canSwipe;
+
     private void Awake()
     {
         ballRigidbody = GetComponent<Rigidbody>();
@@ -50,17 +44,7 @@ public class BallPlayerController : MonoBehaviour
         ballInput.BallControls.Move.canceled += OnMoveCanceled;
         
     }
-    private void Update()
-    {
 
-        //if (Physics.Raycast(transform.position, -Vector3.up, k_GroundRayLength))
-        //{
-        //    canSwipe = true;
-        //}else
-        //{
-        //    canSwipe = false;
-        //}
-    }
     private void FixedUpdate()
     {
 
@@ -104,7 +88,7 @@ public class BallPlayerController : MonoBehaviour
 
         startTouchPosition = context.ReadValue<Vector2>();
             startTime = Time.time; // Record the time when touch begins
-            uI.SetActive(false);
+           // uI.SetActive(false);
           //  lives.SetActive(true);
         
     }
@@ -180,19 +164,18 @@ public class BallPlayerController : MonoBehaviour
     {
         //if (IsGrounded())
         //{
-        Vector3 moveDirection = new Vector3(0, 0, -inputDelta.y).normalized;
+        Vector3 moveDirection = new Vector3(-inputDelta.x, 0, -inputDelta.y).normalized;
 
         // Move in the camera's forward/backward direction
         Vector3 cameraForward = Camera.main.transform.forward;
-        Vector3 rot = new Vector3(0,-inputDelta.x, 0);
+       
         cameraForward.y = 0; // Ignore vertical movement
 
         // Calculate movement in camera's forward/backward direction
         Vector3 moveVector = cameraForward * moveDirection.z + Camera.main.transform.right * moveDirection.x;
         // Move the ball using Rigidbody physics
         ballRigidbody.AddForce(moveVector * speed* swipeDistanceThreshold, ForceMode.Force);
-       // ballRigidbody.AddTorque(rot);
-        //}
+       
     }
 
 

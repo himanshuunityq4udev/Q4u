@@ -11,21 +11,19 @@ public class BallTriggerController : MonoBehaviour
 
     private Vector3 _rebornPoint;
 
-    private bool _isDeath = false;
+  //  private bool _isDeath = false;
 
-    private int _ballType = 0;
+  //  private int _ballType = 0;
 
     [SerializeField]
-    private Material[] _ballMaterials;
+  //  private Material[] _ballMaterials;
 
-    public GameObject freelook;
-    CinemachineVirtualCamera virtualCam;
 
     private Animator _anim;
 
     public void SetBallType(int type)
     {
-        transform.GetChild(0).GetComponent<Renderer>().material = _ballMaterials[type];
+       // transform.GetChild(0).GetComponent<Renderer>().material = _ballMaterials[type];
 
         //if (_ballType != type)
         //{
@@ -50,10 +48,15 @@ public class BallTriggerController : MonoBehaviour
         //}
     }
 
+    private void Start()
+    {
+        
+        _rb = GetComponent<Rigidbody>();
+    }
+
 
     public void SetRebornPoint(Vector3 res)
     {
-        _rb = GetComponent<Rigidbody>();
         _rebornPoint = res;
     }
 
@@ -70,33 +73,31 @@ public class BallTriggerController : MonoBehaviour
     {
         if (other.CompareTag("Finish"))
         {
-            virtualCam = other.gameObject.GetComponentInChildren<CinemachineVirtualCamera>();
+          
             Debug.Log("Complete");
-            freelook.SetActive(false);
-            virtualCam.gameObject.SetActive(true);
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+            _rb.angularVelocity = Vector3.zero;
             _rb.linearVelocity = Vector3.zero;
-            _rb.constraints = RigidbodyConstraints.FreezeAll;
-            _rb.constraints = RigidbodyConstraints.None;
         }
     }
 
 
 
-    public void RebornBall()
-    {
-        this.transform.position = _rebornPoint;
-        _rb.linearVelocity = Vector3.zero;
-        _rb.constraints = RigidbodyConstraints.FreezeAll;
-        _rb.constraints = RigidbodyConstraints.None;
-    }
+    //public void RebornBall()
+    //{
+    //    this.transform.position = _rebornPoint;
+    //    _rb.linearVelocity = Vector3.zero;
+    //    _rb.constraints = RigidbodyConstraints.FreezeAll;
+    //    _rb.constraints = RigidbodyConstraints.None;
+    //}
 
-    void Start()
-    {
-        _rb = GetComponent<Rigidbody>();
+    //void Start()
+    //{
+    //    _rb = GetComponent<Rigidbody>();
 
-        _rebornPoint = _rb.position;
+    //    _rebornPoint = _rb.position;
         
-    }
+    //}
 
     void Update()
     {

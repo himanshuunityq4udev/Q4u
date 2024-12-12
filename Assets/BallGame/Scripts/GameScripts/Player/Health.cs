@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using Unity.Cinemachine;
 
 public class Health : MonoBehaviour
 {
@@ -12,6 +9,7 @@ public class Health : MonoBehaviour
     public Image[] balls;
     public Sprite fullBall;
     public Sprite emptyBall;
+    public Transform StartPos;
 
     private Vector3 respanPosition;
  
@@ -19,6 +17,7 @@ public class Health : MonoBehaviour
     private void Start()
     {
         UpdateBallImage();
+        SetRespanPosition(StartPos.position);
     }
 
 

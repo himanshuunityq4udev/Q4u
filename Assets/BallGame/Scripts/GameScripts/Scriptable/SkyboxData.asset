@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cd1f090590644ec7b860547fef6edf7, type: 3}
+  m_Name: SkyboxData
+  m_EditorClassIdentifier: 
+  skyBoxMaterials:
+  - {fileID: 2100000, guid: ad48f04e0e0e94b0f834faed2f611ff7, type: 2}
+  - {fileID: 2100000, guid: f2e3a5570041d4d0889e43805b170159, type: 2}
+  - {fileID: 2100000, guid: 6ceba5682833043bd814015d341811c4, type: 2}
+  - {fileID: 2100000, guid: d3db2f7c286714ed080e987572c08603, type: 2}
+  - {fileID: 2100000, guid: a19b773cb99414eca97ac6e85b6f7399, type: 2}
+  unlockedSkybox: 0100000000
+  skyboxPrice: 0a000000140000001e00000028000000

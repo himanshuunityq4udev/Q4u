@@ -1,16 +1,21 @@
 using UnityEngine;
-using UnityEditor;
 using System.Collections.Generic;
-
+using TMPro;
 public class SkyboxChanger : MonoBehaviour
 {
-    public List<Material> skyBoxMaterials = new List<Material>();
+    [SerializeField] private GameObject selectButton;
+    [SerializeField] private GameObject unlockButton;
+    [SerializeField] private TMP_Text skyboxPriceText;
+
+    [SerializeField] SkyboxData skyboxData;
+
 
     // PlayerPrefs key for storing the selected skybox index
     private const string SkyboxPrefKey = "SelectedSkybox";
 
     private int CurrentMaterial = 0;
     private Material previousSkybox;
+
 
     private void Start()
     {
@@ -29,7 +34,7 @@ public class SkyboxChanger : MonoBehaviour
         if (next)
         {
             // Move to the next material
-            if (CurrentMaterial < skyBoxMaterials.Count - 1)
+            if (CurrentMaterial < skyboxData.skyBoxMaterials.Count - 1)
             {
                 CurrentMaterial++;
                 Debug.Log("Next: " + CurrentMaterial);
@@ -50,21 +55,22 @@ public class SkyboxChanger : MonoBehaviour
             }
             else
             {
-                CurrentMaterial = skyBoxMaterials.Count - 1;
+                CurrentMaterial = skyboxData.skyBoxMaterials.Count - 1;
                 Debug.Log("Previous: Reset to " + CurrentMaterial);
             }
         }
 
-        // Apply the selected skybox material
-        ApplySkybox();
+        // Apply the selected skybox material(runtime)
+        RenderSettings.skybox = skyboxData.skyBoxMaterials[CurrentMaterial];
+        UpdateUI();
     }
 
     // Function to apply the skybox
-    private void ApplySkybox()
+    public void ApplySkybox()
     {
-        if (CurrentMaterial >= 0 && CurrentMaterial < skyBoxMaterials.Count)
+        if (CurrentMaterial >= 0 && CurrentMaterial < skyboxData.skyBoxMaterials.Count)
         {
-            RenderSettings.skybox = skyBoxMaterials[CurrentMaterial];
+            RenderSettings.skybox = skyboxData.skyBoxMaterials[CurrentMaterial];
             Debug.Log("Previous Skybox: " + (previousSkybox != null ? previousSkybox.name : "None"));
             DynamicGI.UpdateEnvironment(); // Ensure lighting is updated
             Debug.Log("Current Skybox: " + RenderSettings.skybox.name);
@@ -78,14 +84,55 @@ public class SkyboxChanger : MonoBehaviour
     // Function to manually change the skybox based on index
     public void ChangeSkybox(int index)
     {
-        if (index >= 0 && index < skyBoxMaterials.Count)
+        if (index >= 0 && index < skyboxData.skyBoxMaterials.Count)
         {
             // Set the new current material index
             CurrentMaterial = index;
             ApplySkybox();
         }
     }
+
+    private void UpdateUI()
+    {
+        if (skyboxData.unlockedSkybox[CurrentMaterial] == true)
+        {
+            selectButton.gameObject.SetActive(true);
+            unlockButton.gameObject.SetActive(false);
+        }
+        else // If not, show the buy button and set the price
+        {
+            selectButton.gameObject.SetActive(false);
+            unlockButton.gameObject.SetActive(true);
+            skyboxPriceText.text = skyboxData.skyboxPrice[CurrentMaterial-1].ToString();
+        }
+    }
+
+
+    public void UnlockSkybox()
+    {
+        if(MoneyManager.Instance.playerInfo.money >= skyboxData.skyboxPrice[CurrentMaterial - 1])
+        {
+            selectButton.gameObject.SetActive(true);
+            unlockButton.gameObject.SetActive(false);
+            skyboxData.unlockedSkybox[CurrentMaterial] = true;
+            MoneyManager.Instance.SpendMoney(skyboxData.skyboxPrice[CurrentMaterial - 1]);
+        }
+        else
+        {
+            Debug.Log("dont have enough coins");
+        }
+
+    }
 }
+
+
+
+
+
+
+
+
+
 
 
 //if(CurrentMaterial < skyBoxMaterials.Count-1)

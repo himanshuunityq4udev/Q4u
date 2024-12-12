@@ -78,7 +78,11 @@ public class MenuController : MonoBehaviour
             }
         }
         PageStack.Push(Page);
-        Debug.Log(Page.gameObject.name);
+
+        foreach (var page in PageStack)
+        {
+            Debug.Log("Push " + page.gameObject.name);
+        }
     }
 
     public void PopPage()
@@ -86,6 +90,10 @@ public class MenuController : MonoBehaviour
         if (PageStack.Count > 1)
         {
             Page page = PageStack.Pop();
+            foreach (var page1 in PageStack)
+            {
+                Debug.Log("Pop " + page1.gameObject.name);
+            }
             page.Exit(true);
 
             Page newCurrentPage = PageStack.Peek();
