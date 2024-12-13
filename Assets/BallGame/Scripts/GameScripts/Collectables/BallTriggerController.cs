@@ -11,13 +11,14 @@ public class BallTriggerController : MonoBehaviour
 
     private Vector3 _rebornPoint;
 
-  //  private bool _isDeath = false;
+    //  private bool _isDeath = false;
 
-  //  private int _ballType = 0;
+    //  private int _ballType = 0;
 
-    [SerializeField]
-  //  private Material[] _ballMaterials;
 
+    //  private Material[] _ballMaterials;
+    [SerializeField] MenuController menuController;
+    [SerializeField] Page levelCompletePage;
 
     private Animator _anim;
 
@@ -74,6 +75,7 @@ public class BallTriggerController : MonoBehaviour
         if (other.CompareTag("Finish"))
         {
           
+            menuController.PushPage(levelCompletePage);
             Debug.Log("Complete");
             transform.rotation = Quaternion.Euler(0, 0, 0);
             _rb.angularVelocity = Vector3.zero;

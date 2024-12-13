@@ -18,5 +18,6 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 6ceba5682833043bd814015d341811c4, type: 2}
   - {fileID: 2100000, guid: d3db2f7c286714ed080e987572c08603, type: 2}
   - {fileID: 2100000, guid: a19b773cb99414eca97ac6e85b6f7399, type: 2}
-  unlockedSkybox: 0100000000
-  skyboxPrice: 0a000000140000001e00000028000000
+  - {fileID: 2100000, guid: 3abd8c921d1cc4ad287674bd5ef7bcd3, type: 2}
+  unlockedSkybox: 010000000000
+  skyboxPrice: 0a000000140000001e0000002800000032000000
