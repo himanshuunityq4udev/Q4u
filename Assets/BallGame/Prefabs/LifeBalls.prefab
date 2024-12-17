@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2710521229608176886}
   - component: {fileID: 2964490168242458764}
   - component: {fileID: 3659970044353494286}
+  - component: {fileID: 5884536898390062649}
   m_Layer: 0
   m_Name: LifeBalls
   m_TagString: Player
@@ -116,10 +117,22 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7307674353304771359}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d1eb99808824846ee87c70b0081201cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ChangeType: 0
-  coinsManager: {fileID: 0}
+  ballLifemanager: {fileID: 0}
+--- !u!114 &5884536898390062649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7307674353304771359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a56349c064781465f916b9331c20f644, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerData: {fileID: 11400000, guid: c6bc6b5437b874506adb007557cc54b2, type: 2}

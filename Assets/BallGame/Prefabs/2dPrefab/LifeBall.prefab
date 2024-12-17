@@ -89,7 +89,7 @@ GameObject:
   - component: {fileID: 734171725034146734}
   m_Layer: 5
   m_Name: LifeBall
-  m_TagString: Untagged
+  m_TagString: Life
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

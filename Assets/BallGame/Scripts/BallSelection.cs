@@ -16,22 +16,26 @@ public class BallSelection : MonoBehaviour
 
     [Header("Ball Attributes")]
     private int currentDrone = 0;
+    private int _selectedBall;
 
     [SerializeField] BallData ballData;
     [SerializeField] Transform player;
-  
-    void Start()
+
+
+    private void Awake()
     {
         if (!PlayerPrefs.HasKey("CurrentBall"))
         {
             PlayerPrefs.SetInt("CurrentBall", 0);
         }
-        currentDrone = PlayerPrefs.GetInt("CurrentBall");
-        SelectBall();
     }
 
-
-   
+    void Start()
+    {
+        currentDrone = PlayerPrefs.GetInt("CurrentBall");
+        _selectedBall = currentDrone; // Save the currently selected ball.
+        SelectBall();
+    }
 
     private void UpdateUI()
     {
@@ -49,7 +53,7 @@ public class BallSelection : MonoBehaviour
     }
 
 
-    public void ChangeDrone(int _change) 
+    public void ChangeBall(int _change) 
     {
         // Update the current drone index
         currentDrone += _change;
@@ -70,22 +74,30 @@ public class BallSelection : MonoBehaviour
         UpdateUI();
     }
 
+    public void ResetSelectedBall()
+    {
+        currentDrone = _selectedBall; // Reset to previously selected ball.
+        SelectBall();                 // Update the UI to reflect the reset.
+        UpdateUI();                   // Update buttons and price text.
+    }
+
     public void SelectBall()
     {
-        PlayerPrefs.SetInt("CurrentBall", currentDrone);
         for (int i = 0; i < player.childCount; i++)
         {
             //transform.GetChild(i).gameObject.SetActive(i == currentDrone);
             player.GetChild(i).gameObject.SetActive(i == currentDrone);
+            
         }
-
     }
 
     public void UnlockBall()
     {
         if (ballData.ballPrice[currentDrone] <= MoneyManager.Instance.playerInfo.money)
         {
+            PlayerPrefs.SetInt("CurrentBall", currentDrone);
             ballData.unlockedBalls[currentDrone] = true;
+            _selectedBall = currentDrone; // Update the selected ball on unlock.
             UpdateUI();
         }
         else

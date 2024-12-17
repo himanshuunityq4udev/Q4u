@@ -1,10 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class Health : MonoBehaviour
 {
-    public int health;
-    public int numberOfBalls;
+    [SerializeField] private PlayerData playerData;
 
     public Image[] balls;
     public Sprite fullBall;
@@ -12,18 +12,48 @@ public class Health : MonoBehaviour
     public Transform StartPos;
 
     private Vector3 respanPosition;
- 
+
+    public  int health;
+    public  int numberOfBalls;
 
     private void Start()
     {
+        health = playerData.life;
+        numberOfBalls = playerData.totalLife;
         UpdateBallImage();
         SetRespanPosition(StartPos.position);
     }
 
+    private void OnEnable()
+    {
+        ActionHelper.deductLife += DeductLife;
+        ActionHelper.addLife += AddLife;
+    }
+
+    private void OnDisable()
+    {
+        ActionHelper.deductLife -= DeductLife;
+        ActionHelper.addLife -= AddLife;
+    }
+
+
+    public void AddLife()
+    {
+        playerData.life += 1;
+       // health = playerData.life;
+    }
+
+    public void DeductLife()
+    {
+        playerData.life -= 1;
+        //health = playerData.life;
+    }
 
     public void UpdateBallLife(int val)
     {
-        health += val;
+       // health += val;
+
+        //playerData.life += val;
         Invoke("UpdateBallImage", .85f);
     }
     public void SetRespanPosition(Vector3 position)

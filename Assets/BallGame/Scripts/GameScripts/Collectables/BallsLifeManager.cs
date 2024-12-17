@@ -1,9 +1,8 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using TMPro;
-
 
 public class BallsLifeManager : MonoBehaviour
 {
@@ -32,6 +31,9 @@ public class BallsLifeManager : MonoBehaviour
 
     private int _c = 0;
 
+
+
+
     public int Coins
     {
         get { return _c; }
@@ -51,6 +53,14 @@ public class BallsLifeManager : MonoBehaviour
     }
 
 
+    private void OnEnable()
+    {
+        ActionHelper.addLife += AddLife;
+    }
+    private void OnDisable()
+    {
+       ActionHelper.addLife -= AddLife;
+    }
 
 
     void PrepareCoins()
@@ -78,10 +88,10 @@ public class BallsLifeManager : MonoBehaviour
                 coin.SetActive(true);
 
                 //move coin to the collected coin pos
-                coin.transform.position = collectedCoinPosition + new Vector3(Random.Range(-spread, spread), 0f, 0f);
+                coin.transform.position = collectedCoinPosition + new Vector3(UnityEngine.Random.Range(-spread, spread), 0f, 0f);
 
                 //animate coin to target position
-                float duration = Random.Range(minAnimDuration, maxAnimDuration);
+                float duration = UnityEngine.Random.Range(minAnimDuration, maxAnimDuration);
                 coin.transform.DOMove(targetPosition, duration)
                 .SetEase(easeType)
                 .OnComplete(() => {
@@ -96,11 +106,8 @@ public class BallsLifeManager : MonoBehaviour
 
     }
 
-    public void AddCoins(int amount)
+    public void AddLife()
     {
-
-        Animate(spawnPos.position, amount);
-        // Update the saved money in MoneyManager
-        // MoneyManager.Instance.AddMoney(amount);
+        Animate(spawnPos.position, 1);
     }
 }

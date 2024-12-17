@@ -1,16 +1,18 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
-using CandyCoded.HapticFeedback;
-using Unity.Cinemachine;
+
 public class BallPlayerController : MonoBehaviour
 {
     [Header("Movement Settings")]
     public float moveSpeed = 10f;
-  //  [SerializeField] private CinemachineFreeLook freeLookCamera;
+    public float swipeDistanceThreshold = 20;  // Minimum distance for a swipe in units
+    public float swipeTimeThreshold = 0.5f;
 
+    [SerializeField] private float m_MaxAngularVelocity = 25;
+
+ 
     private Rigidbody ballRigidbody;
 
     private BallInputActions ballInput;
@@ -19,15 +21,9 @@ public class BallPlayerController : MonoBehaviour
     private Vector2 currentTouchPosition;
 
     private float startTime;
-
     private Health ballHealth;
 
-    public GameObject uI;
 
-    public float swipeDistanceThreshold = 20;  // Minimum distance for a swipe in units
-    public float swipeTimeThreshold = 0.5f;
-
-    [SerializeField] private float m_MaxAngularVelocity = 25;
 
     private void Awake()
     {
@@ -35,7 +31,6 @@ public class BallPlayerController : MonoBehaviour
         ballInput = new BallInputActions();
         ballHealth = GetComponent<Health>();
         GetComponent<Rigidbody>().maxAngularVelocity = m_MaxAngularVelocity;
-        // Enable input actions
     }
     private void OnEnable()
     {
@@ -44,37 +39,50 @@ public class BallPlayerController : MonoBehaviour
         ballInput.BallControls.Move.canceled += OnMoveCanceled;
         
     }
-
-    private void FixedUpdate()
-    {
-
-        if (transform.position.y < -30)
-        {
-            if (ballHealth.health > 0)
-            {
-                ballHealth.UpdateBallLife(-1);
-                transform.position = ballHealth.GetRespanPosition();
-                transform.rotation = Quaternion.Euler(0, 0, 0);
-                ballRigidbody.angularVelocity = Vector3.zero;
-                ballRigidbody.linearVelocity = Vector3.zero;
-               
-            }
-            else
-            {
-                SceneManager.LoadScene("SlideGame", LoadSceneMode.Single);
-                Debug.Log("Playagain");
-            }
-           
-
-        }
-    }
-
     private void OnDisable()
     {
         // Unsubscribe from input events when the object is disabled
         ballInput.BallControls.Move.started -= OnMoveStarted;
         ballInput.BallControls.Move.canceled -= OnMoveCanceled;
         ballInput.BallControls.Disable();
+    }
+
+    private void Update()
+    {
+        GameOver();
+
+    }
+
+
+    public void GameOver()
+    {
+        if (transform.position.y < -30)
+        {
+            if (ballHealth.health > 0)
+            {
+                ballHealth.UpdateBallLife(-1);
+                transform.position = ballHealth.GetRespanPosition();
+                StopTheBall();
+
+            }
+            else
+            {
+                StopTheBall();
+                ballRigidbody.isKinematic = true;
+                ballRigidbody.useGravity = false;
+                Destroy(transform.gameObject);
+                Debug.Log("Playagain");
+            }
+
+
+        }
+    }
+
+    public void StopTheBall()
+    {
+        transform.rotation = Quaternion.Euler(0, 0, 0);
+        ballRigidbody.angularVelocity = Vector3.zero;
+        ballRigidbody.linearVelocity = Vector3.zero;
     }
 
     // When Move input starts (touch begins)
@@ -85,12 +93,11 @@ public class BallPlayerController : MonoBehaviour
         {
             return;
         }
-
-        startTouchPosition = context.ReadValue<Vector2>();
+        else
+        {
+            startTouchPosition = context.ReadValue<Vector2>();
             startTime = Time.time; // Record the time when touch begins
-           // uI.SetActive(false);
-          //  lives.SetActive(true);
-        
+        }
     }
 
 
@@ -162,20 +169,22 @@ public class BallPlayerController : MonoBehaviour
         // Function to move the ball
     private void MoveBall(Vector2 inputDelta, float speed)
     {
-        //if (IsGrounded())
-        //{
-        Vector3 moveDirection = new Vector3(-inputDelta.x, 0, -inputDelta.y).normalized;
+        if (IsGrounded())
+        {
 
-        // Move in the camera's forward/backward direction
-        Vector3 cameraForward = Camera.main.transform.forward;
-       
-        cameraForward.y = 0; // Ignore vertical movement
+            Vector3 moveDirection = new Vector3(-inputDelta.x, 0, -inputDelta.y).normalized;
 
-        // Calculate movement in camera's forward/backward direction
-        Vector3 moveVector = cameraForward * moveDirection.z + Camera.main.transform.right * moveDirection.x;
-        // Move the ball using Rigidbody physics
-        ballRigidbody.AddForce(moveVector * speed* swipeDistanceThreshold, ForceMode.Force);
-       
+            // Move in the camera's forward/backward direction
+            Vector3 cameraForward = Camera.main.transform.forward;
+
+            cameraForward.y = 0; // Ignore vertical movement
+
+            // Calculate movement in camera's forward/backward direction
+            Vector3 moveVector = cameraForward * moveDirection.z + Camera.main.transform.right * moveDirection.x;
+
+            // Move the ball using Rigidbody physics
+            ballRigidbody.AddForce(moveVector * speed * swipeDistanceThreshold, ForceMode.Force);
+        }
     }
 
 
@@ -185,12 +194,6 @@ public class BallPlayerController : MonoBehaviour
         return Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 100f);
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (!collision.gameObject.CompareTag("Ground"))
-        {
-            HapticFeedback.MediumFeedback();
-        }
-    }
+   
     
 }

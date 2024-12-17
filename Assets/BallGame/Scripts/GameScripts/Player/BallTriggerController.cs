@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using Unity.Cinemachine;
+using CandyCoded.HapticFeedback;
 
 public class BallTriggerController : MonoBehaviour
 {
@@ -20,7 +21,8 @@ public class BallTriggerController : MonoBehaviour
     [SerializeField] MenuController menuController;
     [SerializeField] Page levelCompletePage;
 
-    private Animator _anim;
+    [SerializeField] GameObject freeloocCamera;
+    [SerializeField] private Animator _anim;
 
     public void SetBallType(int type)
     {
@@ -61,15 +63,15 @@ public class BallTriggerController : MonoBehaviour
         _rebornPoint = res;
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.tag == "Boxes") {
-            foreach (Transform child in collision.transform.parent) {
-               // child.GetComponent<Rigidbody>().AddExplosionForce(100, collision.contacts[0].point,5,3);
-            }
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    if (collision.gameObject.tag == "Boxes") {
+    //        foreach (Transform child in collision.transform.parent) {
+    //           // child.GetComponent<Rigidbody>().AddExplosionForce(100, collision.contacts[0].point,5,3);
+    //        }
         
-        }
-    }
+    //    }
+    //}
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Finish"))
@@ -80,10 +82,20 @@ public class BallTriggerController : MonoBehaviour
             transform.rotation = Quaternion.Euler(0, 0, 0);
             _rb.angularVelocity = Vector3.zero;
             _rb.linearVelocity = Vector3.zero;
+            freeloocCamera.SetActive(false);
+            _anim.enabled = true;
         }
     }
 
 
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!collision.gameObject.CompareTag("Ground"))
+        {
+            HapticFeedback.MediumFeedback();
+        }
+    }
 
     //public void RebornBall()
     //{
@@ -98,7 +110,7 @@ public class BallTriggerController : MonoBehaviour
     //    _rb = GetComponent<Rigidbody>();
 
     //    _rebornPoint = _rb.position;
-        
+
     //}
 
     void Update()

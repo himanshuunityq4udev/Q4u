@@ -19,7 +19,7 @@ public class LifeBallManager : MonoBehaviour
         {
             if (other.GetComponent<Health>().health < 4)
             {
-                ballLifemanager.AddCoins(1);
+              //  ballLifemanager.AddCoins(1);
                 other.GetComponent<Health>().UpdateBallLife(1);
                 other.GetComponent<Health>().SetRespanPosition(transform.position);
                 gameObject.SetActive(false);

@@ -14,7 +14,18 @@ public class SkyboxChanger : MonoBehaviour
     private const string SkyboxPrefKey = "SelectedSkybox";
 
     private int CurrentMaterial = 0;
+
+    private int selectedSkybox = 0; // Keeps track of which skybox is selected
+
     private Material previousSkybox;
+
+    private void Awake()
+    {
+        if (!PlayerPrefs.HasKey("SkyboxPrefKey"))
+        {
+            PlayerPrefs.SetInt("SkyboxPrefKey", 0);
+        }
+    }
 
 
     private void Start()
@@ -91,6 +102,14 @@ public class SkyboxChanger : MonoBehaviour
             ApplySkybox();
         }
     }
+
+    public void ResetSelectedSkyBox()
+    {
+        // Apply the selected skybox material(runtime)
+        RenderSettings.skybox = previousSkybox;
+
+    }
+
 
     private void UpdateUI()
     {
