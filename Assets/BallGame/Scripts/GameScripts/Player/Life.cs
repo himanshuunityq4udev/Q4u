@@ -7,9 +7,8 @@ public class Life : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-                // BallsLifeManager.addLife?.Invoke();
                 ActionHelper.addLife.Invoke();
-                other.GetComponent<Health>().SetRespanPosition(transform.position);
+                playerData.respawnPosition = transform.position;
                 Destroy(gameObject);
         }
     }

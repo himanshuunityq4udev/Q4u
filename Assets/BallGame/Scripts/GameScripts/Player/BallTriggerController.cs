@@ -89,13 +89,6 @@ public class BallTriggerController : MonoBehaviour
 
 
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (!collision.gameObject.CompareTag("Ground"))
-        {
-            HapticFeedback.MediumFeedback();
-        }
-    }
 
     //public void RebornBall()
     //{

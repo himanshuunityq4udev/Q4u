@@ -91,8 +91,8 @@ public class Ball : MonoBehaviour
     private void HandleBallRespawn()
     {
        ActionHelper.deductLife?.Invoke();
-        transform.position = playerData.respawnPosition;
-        StopTheBall();
+       transform.position = playerData.respawnPosition;
+       StopTheBall();
     }
 
     // Handles ball destruction logic

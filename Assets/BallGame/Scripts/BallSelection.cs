@@ -19,7 +19,7 @@ public class BallSelection : MonoBehaviour
     private int _selectedBall;
 
     [SerializeField] BallData ballData;
-    [SerializeField] Transform player;
+    [SerializeField] Transform playerContainer;
 
 
     private void Awake()
@@ -58,18 +58,18 @@ public class BallSelection : MonoBehaviour
         // Update the current drone index
         currentDrone += _change;
 
-        if (currentDrone > player.childCount - 1)
+        if (currentDrone > playerContainer.childCount - 1)
         {
             currentDrone = 0;
         }
         else if (currentDrone < 0)
         {
-            currentDrone = player.childCount - 1;
+            currentDrone = playerContainer.childCount - 1;
         }
 
-        for (int i = 0; i < player.childCount; i++)
+        for (int i = 0; i < playerContainer.childCount; i++)
         {
-            player.GetChild(i).gameObject.SetActive(i == currentDrone);
+            playerContainer.GetChild(i).gameObject.SetActive(i == currentDrone);
         }
         UpdateUI();
     }
@@ -83,10 +83,10 @@ public class BallSelection : MonoBehaviour
 
     public void SelectBall()
     {
-        for (int i = 0; i < player.childCount; i++)
+        for (int i = 0; i < playerContainer.childCount; i++)
         {
             //transform.GetChild(i).gameObject.SetActive(i == currentDrone);
-            player.GetChild(i).gameObject.SetActive(i == currentDrone);
+            playerContainer.GetChild(i).gameObject.SetActive(i == currentDrone);
             
         }
     }

@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 1046013166981768130}
   - component: {fileID: 2710521229608176886}
   - component: {fileID: 2964490168242458764}
-  - component: {fileID: 3659970044353494286}
   - component: {fileID: 5884536898390062649}
   m_Layer: 0
   m_Name: LifeBalls
@@ -110,19 +109,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3659970044353494286
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7307674353304771359}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1eb99808824846ee87c70b0081201cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ballLifemanager: {fileID: 0}
 --- !u!114 &5884536898390062649
 MonoBehaviour:
   m_ObjectHideFlags: 0

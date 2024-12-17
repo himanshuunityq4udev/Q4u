@@ -1,11 +1,10 @@
 using UnityEngine;
 using System;
-public class LifeManager : MonoBehaviour
+public class LifeSpawnManager : MonoBehaviour
 {
 
     [SerializeField] GameObject lifePrefab;
     [SerializeField] GameObject[] lifeSpawnPoints;
-
     [SerializeField] PlayerData playerData;
 
 
@@ -17,18 +16,28 @@ public class LifeManager : MonoBehaviour
 
         lifeSpawnPoints = GameObject.FindGameObjectsWithTag("LifeSpawnPoint");
 
+        SpawnLife();
+    }
 
-        NeedLifeOrNot();
+    private void Update()
+    {
+        if(playerData.life == 4)
+        {
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                Destroy(transform.GetChild(i).gameObject);
+            }
+        }
     }
 
     //Check if there is need of life or not 
-    public void NeedLifeOrNot()
+    public void SpawnLife()
     {
         if (playerData.life < 4)
         {
-            for (int i = 0; i < lifeSpawnPoints.Length; i++)
-            {
-                Instantiate(lifePrefab, lifeSpawnPoints[i].transform.position, lifeSpawnPoints[i].transform.rotation);
+            for (int i = 0; i < lifeSpawnPoints.Length; i++) 
+            { 
+                Instantiate(lifePrefab, lifeSpawnPoints[i].transform.position, lifeSpawnPoints[i].transform.rotation,transform);
             }
         }
     }

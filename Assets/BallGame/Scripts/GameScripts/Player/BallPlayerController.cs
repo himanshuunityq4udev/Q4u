@@ -56,11 +56,11 @@ public class BallPlayerController : MonoBehaviour
 
     public void GameOver()
     {
-        if (transform.position.y < -30)
+        /*if (transform.position.y < -30)
         {
-            if (ballHealth.health > 0)
+            if (ballHealth.life > 0)
             {
-                ballHealth.UpdateBallLife(-1);
+               // ballHealth.UpdateBallLife(-1);
                 transform.position = ballHealth.GetRespanPosition();
                 StopTheBall();
 
@@ -75,7 +75,7 @@ public class BallPlayerController : MonoBehaviour
             }
 
 
-        }
+        }*/
     }
 
     public void StopTheBall()
@@ -93,11 +93,10 @@ public class BallPlayerController : MonoBehaviour
         {
             return;
         }
-        else
-        {
-            startTouchPosition = context.ReadValue<Vector2>();
-            startTime = Time.time; // Record the time when touch begins
-        }
+
+        startTouchPosition = context.ReadValue<Vector2>();
+        startTime = Time.time; // Record the time when touch begins
+        
     }
 
 

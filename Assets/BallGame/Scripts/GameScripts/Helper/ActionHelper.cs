@@ -14,5 +14,7 @@ public class ActionHelper : MonoBehaviour
     public static Action addLife;
 
 
+    //HealthScript ->ballLifeManager script
+    public static Action updateLifeUI;
 
 }

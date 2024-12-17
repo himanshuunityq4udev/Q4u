@@ -28,6 +28,7 @@ public class PlayerInput : MonoBehaviour
         ballInput.BallControls.Move.started += OnMoveStarted;
         ballInput.BallControls.Move.canceled += OnMoveCanceled;
     }
+
     private void OnDisable()
     {
         // Unsubscribe from input events when the object is disabled
@@ -35,7 +36,6 @@ public class PlayerInput : MonoBehaviour
         ballInput.BallControls.Move.canceled -= OnMoveCanceled;
         ballInput.BallControls.Disable();
     }
-
     #endregion
 
     #region ------------- Player Input ----------------------
@@ -43,16 +43,15 @@ public class PlayerInput : MonoBehaviour
     // When Move input starts (touch begins)
     private void OnMoveStarted(InputAction.CallbackContext context)
     {
-        //  Ignore input if the pointer is over a UI element(for both mouse and touch)
+       /* //  Ignore input if the pointer is over a UI element(for both mouse and touch)
         if (IsPointerOverUI())
         {
             return;
-        }
-        else
-        {
+        }*/
+      
             startTouchPosition = context.ReadValue<Vector2>();
             startTime = Time.time; // Record the time when touch begins
-        }
+        
     }
 
     // When Move input is canceled (touch ends)
@@ -121,4 +120,5 @@ public class PlayerInput : MonoBehaviour
         }
     }
     #endregion
+
 }
