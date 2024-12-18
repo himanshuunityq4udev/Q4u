@@ -5,32 +5,36 @@ public class Ball : MonoBehaviour
     [SerializeField] private PlayerData playerData;
 
     private Rigidbody ballRigidbody;
+    bool isLevelFailed =  false;
 
-
-  //  private Health ballHealth;
-
- 
     #region ------------Unity Callbacks---------------
 
     private void Awake()
     {
-       // ballHealth = GetComponent<Health>();
+  
         ballRigidbody = GetComponent<Rigidbody>();
         GetComponent<Rigidbody>().maxAngularVelocity = playerData.m_MaxAngularVelocity;
+        playerData.respawnPosition = new Vector3(0, 1, 0);
     }
 
     private void OnEnable()
     {
         ActionHelper.onMove += MoveBall;
+        ActionHelper.ResetPlayer += ResetBall;
     }
     private void OnDisable()
     {
         ActionHelper.onMove -= MoveBall;
+        ActionHelper.ResetPlayer -= ResetBall;
+
     }
 
     private void Update()
     {
-        ResetBall();
+        if (!isLevelFailed)
+        {
+            ResetBall();
+        }
 
     }
     #endregion
@@ -90,18 +94,22 @@ public class Ball : MonoBehaviour
     // Handles ball respawn logic
     private void HandleBallRespawn()
     {
-       ActionHelper.deductLife?.Invoke();
-       transform.position = playerData.respawnPosition;
-       StopTheBall();
+        ActionHelper.deductLife?.Invoke();
+        ActionHelper.SpawnLife?.Invoke();
+        transform.position = playerData.respawnPosition;
+        StopTheBall();
+        isLevelFailed = false;
+        ballRigidbody.isKinematic = false;
+        ballRigidbody.useGravity = true;
     }
-
     // Handles ball destruction logic
     private void HandleBallDestruction()
     {
         StopTheBall();
         ballRigidbody.isKinematic = true;
         ballRigidbody.useGravity = false;
-        //Destroy(transform.gameObject);
+        ActionHelper.LevelFailed?.Invoke();
+        isLevelFailed = true;
     }
 
     //Make the ball velocity zero

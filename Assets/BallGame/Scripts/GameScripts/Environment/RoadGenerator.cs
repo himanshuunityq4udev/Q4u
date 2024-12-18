@@ -84,6 +84,7 @@ public class RoadGenerator : MonoBehaviour
             PlacePlank(endPlank);
         }
 
+        ActionHelper.SpawnLife?.Invoke();
         // Cleanup
         Destroy(currentEndTransform.gameObject);
     }

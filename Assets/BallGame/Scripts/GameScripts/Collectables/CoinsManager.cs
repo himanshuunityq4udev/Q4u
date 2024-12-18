@@ -102,7 +102,7 @@ public class CoinsManager : MonoBehaviour
 					coin.SetActive (false);
 					coinsQueue.Enqueue (coin);
                    // Coins++;
-                    MoneyManager.Instance.AddMoney(1); // Add one coin to the saved data
+                    //MoneyManager.Instance.AddMoney(1); // Add one coin to the saved data
                 });
 			}
 		}
@@ -114,6 +114,6 @@ public class CoinsManager : MonoBehaviour
 
 		Animate (spawnPos.position, amount);
         // Update the saved money in MoneyManager
-       // MoneyManager.Instance.AddMoney(amount);
+		MoneyManager.Instance.AddMoney(amount);
     }
 }

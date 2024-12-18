@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
-using TMPro;
 using UnityEngine.UI;
 
 public class BallsLifeManager : MonoBehaviour

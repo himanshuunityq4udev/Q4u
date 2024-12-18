@@ -2,9 +2,11 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
+    [Header("Audio SourcesS")]
     [SerializeField] private AudioSource _musicSource;
     [SerializeField] private AudioSource _sFXSource;
 
+    [Header("Audio clips")]
     [SerializeField] private AudioClip background;
     [SerializeField] private AudioClip coinHit;
     [SerializeField] private AudioClip lifeHit;

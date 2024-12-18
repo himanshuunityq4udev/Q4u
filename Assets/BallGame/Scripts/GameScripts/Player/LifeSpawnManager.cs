@@ -1,5 +1,4 @@
 using UnityEngine;
-using System;
 public class LifeSpawnManager : MonoBehaviour
 {
 
@@ -8,20 +7,25 @@ public class LifeSpawnManager : MonoBehaviour
     [SerializeField] PlayerData playerData;
 
 
+    private void OnEnable()
+    {
+        ActionHelper.SpawnLife += SpawnLife;
+    }
+
+    private void OnDisable()
+    {
+        ActionHelper.SpawnLife -= SpawnLife;
+
+    }
+
     private void Start()
     {
-        int length = GameObject.FindGameObjectsWithTag("LifeSpawnPoint").Length;
-
-        lifeSpawnPoints = new GameObject[length];
-
-        lifeSpawnPoints = GameObject.FindGameObjectsWithTag("LifeSpawnPoint");
-
-        SpawnLife();
+        //SpawnLife();
     }
 
     private void Update()
     {
-        if(playerData.life == 4)
+        if(playerData.life == playerData.totalLife)
         {
             for (int i = 0; i < transform.childCount; i++)
             {
@@ -33,7 +37,13 @@ public class LifeSpawnManager : MonoBehaviour
     //Check if there is need of life or not 
     public void SpawnLife()
     {
-        if (playerData.life < 4)
+        int length = GameObject.FindGameObjectsWithTag("LifeSpawnPoint").Length;
+
+        lifeSpawnPoints = new GameObject[length];
+
+        lifeSpawnPoints = GameObject.FindGameObjectsWithTag("LifeSpawnPoint");
+
+        if (playerData.life < playerData.totalLife)
         {
             for (int i = 0; i < lifeSpawnPoints.Length; i++) 
             { 
