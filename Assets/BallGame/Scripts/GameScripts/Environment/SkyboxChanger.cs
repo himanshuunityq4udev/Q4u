@@ -27,6 +27,19 @@ public class SkyboxChanger : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        ActionHelper.SelectSky += ApplySkybox;
+        ActionHelper.UnlockSky += UnlockSkybox;
+    }
+
+    private void OnDisable()
+    {
+        ActionHelper.SelectSky -= ApplySkybox;
+        ActionHelper.UnlockSky -= UnlockSkybox;
+
+
+    }
 
     private void Start()
     {
@@ -138,20 +151,11 @@ public class SkyboxChanger : MonoBehaviour
         }
         else
         {
-            Debug.Log("dont have enough coins");
+            ActionHelper.DontHaveEnoughCoins?.Invoke();
         }
 
     }
 }
-
-
-
-
-
-
-
-
-
 
 
 //if(CurrentMaterial < skyBoxMaterials.Count-1)

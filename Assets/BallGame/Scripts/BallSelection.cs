@@ -30,6 +30,23 @@ public class BallSelection : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        ActionHelper.SelectBall += SelectBall;   
+        ActionHelper.UnlockBall += UnlockBall;
+        ActionHelper.ResetBallSelection += ResetSelectedBall;
+    }
+
+    private void OnDisable()
+    {
+        ActionHelper.SelectBall -= SelectBall;
+        ActionHelper.UnlockBall -= UnlockBall;
+        ActionHelper.ResetBallSelection -= ResetSelectedBall;
+
+
+
+    }
+
     void Start()
     {
         currentDrone = PlayerPrefs.GetInt("CurrentBall");
@@ -48,7 +65,7 @@ public class BallSelection : MonoBehaviour
         {
             selectButton.gameObject.SetActive(false);
             unlockButton.gameObject.SetActive(true);
-            priceText.text = ballData.ballPrice[currentDrone-1].ToString();
+            priceText.text = ballData.ballPrice[currentDrone].ToString();
         }
     }
 
@@ -85,9 +102,11 @@ public class BallSelection : MonoBehaviour
     {
         for (int i = 0; i < playerContainer.childCount; i++)
         {
-            //transform.GetChild(i).gameObject.SetActive(i == currentDrone);
             playerContainer.GetChild(i).gameObject.SetActive(i == currentDrone);
-            
+            if (i == currentDrone)
+            {
+                PlayerPrefs.SetInt("CurrentBall", currentDrone);
+            }
         }
     }
 
@@ -102,7 +121,7 @@ public class BallSelection : MonoBehaviour
         }
         else
         {
-            Debug.Log("Dont have enough coins");
+            ActionHelper.DontHaveEnoughCoins?.Invoke();
         }
     }
 }

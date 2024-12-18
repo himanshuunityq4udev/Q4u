@@ -11,13 +11,16 @@ public class Health : MonoBehaviour
     {
         ActionHelper.deductLife += DeductLife;
         ActionHelper.addLife += AddLife;
+        ActionHelper.ReviveLife += ReviveAllLife;
     }
 
     private void OnDisable()
     {
         ActionHelper.deductLife -= DeductLife;
         ActionHelper.addLife -= AddLife;
-    
+        ActionHelper.ReviveLife -= ReviveAllLife;
+
+
     }
     public void AddLife()
     {
