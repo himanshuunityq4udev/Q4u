@@ -24,10 +24,9 @@ public class ActionHelper : MonoBehaviour
     //LevelGenerator -> lifeSpawnManager,ball Script
     public static Action SpawnLife;
 
-
     /// ______________UI__________________
 
-    //CollicionHandler script -> UIManager script
+    //CollicionHandler script -> UIManager script,coinManager Script
     public static Action LevelComplete;
 
     //Ball script -> UIManager script
@@ -36,4 +35,8 @@ public class ActionHelper : MonoBehaviour
 
     //Health script -> UImanager script
     public static Action DontHaveEnoughCoins;
+
+    //MonwyManager script -> CoinManager script
+    public static  Action<int> OnMoneyChanged; // Event to notify money changes
+
 }

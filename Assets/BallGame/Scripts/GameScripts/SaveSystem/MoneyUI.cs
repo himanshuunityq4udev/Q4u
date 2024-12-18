@@ -7,12 +7,12 @@ public class MoneyUI : MonoBehaviour
 
     private void OnEnable()
     {
-        MoneyManager.OnMoneyChanged += UpdateMoneyUI; // Subscribe to the event
+        ActionHelper.OnMoneyChanged += UpdateMoneyUI; // Subscribe to the event
     }
 
     private void OnDisable()
     {
-        MoneyManager.OnMoneyChanged -= UpdateMoneyUI; // Unsubscribe to avoid memory leaks
+        ActionHelper.OnMoneyChanged -= UpdateMoneyUI; // Unsubscribe to avoid memory leaks
     }
 
     private void UpdateMoneyUI(int newMoney)

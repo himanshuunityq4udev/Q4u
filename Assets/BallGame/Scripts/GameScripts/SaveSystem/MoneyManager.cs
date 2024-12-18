@@ -7,8 +7,7 @@ public class MoneyManager : MonoBehaviour
     public PlayerInformation playerInfo;
     private const string PlayerDataKey = "players";
 
-    public static event Action<int> OnMoneyChanged; // Event to notify money changes
-
+   
     public static MoneyManager Instance { get; private set; }
 
     private void Awake()
@@ -21,7 +20,6 @@ public class MoneyManager : MonoBehaviour
 
         Instance = this;
     }
-
 
     private async void Start()
     { 
@@ -111,7 +109,7 @@ public class MoneyManager : MonoBehaviour
 
     private void NotifyMoneyChanged()
     {
-        OnMoneyChanged?.Invoke(playerInfo.money); // Notify subscribers
+       ActionHelper.OnMoneyChanged?.Invoke(playerInfo.money); // Notify subscribers
     }
 
 }

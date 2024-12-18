@@ -9,7 +9,8 @@ public class CoinsManager : MonoBehaviour
 	//References
 	[Header ("UI references")]
 	[SerializeField] TMP_Text coinUIText;
-	[SerializeField] GameObject animatedCoinPrefab;
+	[SerializeField] TMP_Text mainCoinUIText;
+    [SerializeField] GameObject animatedCoinPrefab;
 	[SerializeField] Transform target;
 	[SerializeField] Transform spawnPos;
 
@@ -28,6 +29,9 @@ public class CoinsManager : MonoBehaviour
 	[SerializeField] float spread;
 
 	Vector3 targetPosition;
+
+	private int collectedCoins = 0;
+
 
 	private int _c = 0;
 
@@ -52,17 +56,20 @@ public class CoinsManager : MonoBehaviour
 
     private void OnEnable()
     {
-        MoneyManager.OnMoneyChanged += UpdateMoneyUI; // Subscribe to the event
+        ActionHelper.OnMoneyChanged += UpdateMoneyUI; // Subscribe to the event
+		ActionHelper.LevelComplete += CollectedCoins;
     }
 
     private void OnDisable()
     {
-        MoneyManager.OnMoneyChanged -= UpdateMoneyUI; // Unsubscribe to avoid memory leaks
+        ActionHelper.OnMoneyChanged -= UpdateMoneyUI; // Unsubscribe to avoid memory leaks
+        ActionHelper.LevelComplete -= CollectedCoins;
+
     }
 
     private void UpdateMoneyUI(int newMoney)
     {
-		coinUIText.text = newMoney.ToString();
+        mainCoinUIText.text = newMoney.ToString();
 		
     }
 
@@ -101,7 +108,7 @@ public class CoinsManager : MonoBehaviour
 					//executes whenever coin reach target position
 					coin.SetActive (false);
 					coinsQueue.Enqueue (coin);
-                   // Coins++;
+                    Coins++;
                     //MoneyManager.Instance.AddMoney(1); // Add one coin to the saved data
                 });
 			}
@@ -111,9 +118,14 @@ public class CoinsManager : MonoBehaviour
 
 	public void AddCoins (int amount)
 	{
+		collectedCoins += amount;
+        Animate (spawnPos.position, amount);
+		Debug.Log("Himanshu" + collectedCoins);
+    }
 
-		Animate (spawnPos.position, amount);
-        // Update the saved money in MoneyManager
-		MoneyManager.Instance.AddMoney(amount);
+	public void CollectedCoins()
+	{
+		coinUIText.text = collectedCoins.ToString();
+        MoneyManager.Instance.AddMoney(collectedCoins);
     }
 }

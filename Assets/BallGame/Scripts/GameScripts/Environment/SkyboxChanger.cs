@@ -15,7 +15,7 @@ public class SkyboxChanger : MonoBehaviour
 
     private int CurrentMaterial = 0;
 
-    private int selectedSkybox = 0; // Keeps track of which skybox is selected
+   
 
     private Material previousSkybox;
 
