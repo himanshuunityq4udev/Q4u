@@ -38,6 +38,10 @@ public class UiManager : MonoBehaviour
     [SerializeField] private Button ReviveLifeButton;
     [SerializeField] private Button HomeButton2;
 
+    //LevelComplete
+    [SerializeField] private Button NextButton;
+
+
 
 
 
@@ -92,6 +96,9 @@ public class UiManager : MonoBehaviour
         //--------Revive Life --------
         ReviveLifeButton.onClick.AddListener(OnReviveLifeButtonClicked);
         HomeButton2.onClick.AddListener(OnHomeButtonClicked);
+
+        //Next Level
+        NextButton.onClick.AddListener(OnNextButtonClicked);
 
     }
 
@@ -189,6 +196,12 @@ public class UiManager : MonoBehaviour
     {
         menuController.PushPage(levelCompletePage);
     }
+    public void OnNextButtonClicked()
+    {
+        ActionHelper.GenerateNewLevel?.Invoke();
+        menuController.PopPage();
+    }
+
 
     #region------ Level Failed Panel -------------
 

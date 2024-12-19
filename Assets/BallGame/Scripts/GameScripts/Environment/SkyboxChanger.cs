@@ -61,12 +61,12 @@ public class SkyboxChanger : MonoBehaviour
             if (CurrentMaterial < skyboxData.skyBoxMaterials.Count - 1)
             {
                 CurrentMaterial++;
-                Debug.Log("Next: " + CurrentMaterial);
+              //  Debug.Log("Next: " + CurrentMaterial);
             }
             else
             {
                 CurrentMaterial = 0;
-                Debug.Log("Next: Reset to 0");
+              //  Debug.Log("Next: Reset to 0");
             }
         }
         else
@@ -75,12 +75,12 @@ public class SkyboxChanger : MonoBehaviour
             if (CurrentMaterial > 0)
             {
                 CurrentMaterial--;
-                Debug.Log("Previous: " + CurrentMaterial);
+               // Debug.Log("Previous: " + CurrentMaterial);
             }
             else
             {
                 CurrentMaterial = skyboxData.skyBoxMaterials.Count - 1;
-                Debug.Log("Previous: Reset to " + CurrentMaterial);
+              //  Debug.Log("Previous: Reset to " + CurrentMaterial);
             }
         }
 
@@ -95,9 +95,9 @@ public class SkyboxChanger : MonoBehaviour
         if (CurrentMaterial >= 0 && CurrentMaterial < skyboxData.skyBoxMaterials.Count)
         {
             RenderSettings.skybox = skyboxData.skyBoxMaterials[CurrentMaterial];
-            Debug.Log("Previous Skybox: " + (previousSkybox != null ? previousSkybox.name : "None"));
+           // Debug.Log("Previous Skybox: " + (previousSkybox != null ? previousSkybox.name : "None"));
             DynamicGI.UpdateEnvironment(); // Ensure lighting is updated
-            Debug.Log("Current Skybox: " + RenderSettings.skybox.name);
+           // Debug.Log("Current Skybox: " + RenderSettings.skybox.name);
 
             // Save the selected skybox index for persistence
             PlayerPrefs.SetInt(SkyboxPrefKey, CurrentMaterial);

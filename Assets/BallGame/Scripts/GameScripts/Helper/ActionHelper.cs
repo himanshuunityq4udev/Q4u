@@ -16,19 +16,23 @@ public class ActionHelper : MonoBehaviour
     //HealthScript ->ballLifeManager script
     public static Action updateLifeUI;
 
-    //HealthScript ->ball script
+    //HealthScript -> ball script
     public static Action ResetPlayer;
 
-    //LevelGenerator -> lifeSpawnManager,ball Script
+    //RoadGenerator -> lifeSpawnManager Script
     public static Action SpawnLife;
 
 
     //UiManager script -> LevelLoader script
     public static Action GoHome;
 
+
+    //DimandCollector script - coinmanager script
+    public static Action<int> AddNumberOfCoins;
+
     /// ______________UI__________________
 
-    //CollicionHandler script -> UIManager script,coinManager Script
+    //CollicionHandler script -> UIManager script,coinManager Script, RoadGenerator script
     public static Action LevelComplete;
 
     //Ball script -> UIManager script
@@ -55,4 +59,7 @@ public class ActionHelper : MonoBehaviour
 
     //UIManager Script ->Health Script
     public static Action ReviveLife;
+
+    //UImanager script  -> RoadGenerator script, CollisionHandler script
+    public static Action GenerateNewLevel;
 }

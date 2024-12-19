@@ -20,16 +20,40 @@ public class LifeSpawnManager : MonoBehaviour
 
     private void Start()
     {
-        //SpawnLife();
+        SpawnLife();
     }
 
     private void Update()
     {
-        if(playerData.life == playerData.totalLife)
+        if (playerData.life == playerData.totalLife)
         {
             for (int i = 0; i < transform.childCount; i++)
             {
-                Destroy(transform.GetChild(i).gameObject);
+                if (transform.GetChild(i).transform.GetChild(1))
+                {
+                    bool isCollected = transform.GetChild(i).transform.GetChild(1).gameObject.GetComponent<Life>().IsCollected;
+                    GameObject lifeObj = transform.GetChild(i).transform.GetChild(1).gameObject;
+                    if (!isCollected)
+                    {
+                        lifeObj.SetActive(false);
+                    }
+                }
+            }
+        }
+        if (playerData.life < playerData.totalLife)
+        {
+            for (int i = 0; i < transform.childCount; i++)
+            {
+
+                if (transform.GetChild(i).transform.GetChild(1))
+                {
+                    bool isCollected = transform.GetChild(i).transform.GetChild(1).gameObject.GetComponent<Life>().IsCollected;
+                    GameObject lifeObj = transform.GetChild(i).transform.GetChild(1).gameObject;
+                    if (!isCollected)
+                    {
+                        lifeObj.SetActive(true);
+                    }
+                }
             }
         }
     }
@@ -43,12 +67,11 @@ public class LifeSpawnManager : MonoBehaviour
 
         lifeSpawnPoints = GameObject.FindGameObjectsWithTag("LifeSpawnPoint");
 
-        if (playerData.life < playerData.totalLife)
-        {
+       
             for (int i = 0; i < lifeSpawnPoints.Length; i++) 
             { 
                 Instantiate(lifePrefab, lifeSpawnPoints[i].transform.position, lifeSpawnPoints[i].transform.rotation,transform);
             }
-        }
+       
     }
 }

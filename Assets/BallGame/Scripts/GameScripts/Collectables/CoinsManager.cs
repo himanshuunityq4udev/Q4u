@@ -58,12 +58,15 @@ public class CoinsManager : MonoBehaviour
     {
         ActionHelper.OnMoneyChanged += UpdateMoneyUI; // Subscribe to the event
 		ActionHelper.LevelComplete += CollectedCoins;
+		ActionHelper.AddNumberOfCoins += AddCoins;
     }
 
     private void OnDisable()
     {
         ActionHelper.OnMoneyChanged -= UpdateMoneyUI; // Unsubscribe to avoid memory leaks
         ActionHelper.LevelComplete -= CollectedCoins;
+        ActionHelper.AddNumberOfCoins -= AddCoins;
+
 
     }
 
@@ -120,7 +123,7 @@ public class CoinsManager : MonoBehaviour
 	{
 		collectedCoins += amount;
         Animate (spawnPos.position, amount);
-		Debug.Log("Himanshu" + collectedCoins);
+	//	Debug.Log("Himanshu" + collectedCoins);
     }
 
 	public void CollectedCoins()

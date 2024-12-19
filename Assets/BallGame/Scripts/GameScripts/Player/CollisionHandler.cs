@@ -12,6 +12,16 @@ public class CollisionHandler : MonoBehaviour
         _ballrb = GetComponent<Rigidbody>();
         playerInput = GetComponent<PlayerInput>();
     }
+    private void OnEnable()
+    {
+        ActionHelper.GenerateNewLevel += NextLevel;
+    }
+    private void OnDisable()
+    {
+        ActionHelper.GenerateNewLevel -= NextLevel;
+
+    }
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -35,4 +45,17 @@ public class CollisionHandler : MonoBehaviour
             HapticFeedback.MediumFeedback();
         }
     }
+
+
+    #region -----------NextLevel -------------
+
+    private void NextLevel()
+    {
+        transform.position = new Vector3(0, 1, 0);
+        transform.rotation = Quaternion.identity;
+        playerInput.enabled = true;
+        cam1.SetActive(true);
+        cam2.SetActive(false);
+    }
+    #endregion
 }

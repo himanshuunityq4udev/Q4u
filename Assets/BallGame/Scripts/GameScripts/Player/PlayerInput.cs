@@ -68,7 +68,7 @@ public class PlayerInput : MonoBehaviour
         float swipeTime = Time.time - startTime; // Calculate swipe time
         float swipeDistance = touchDelta.magnitude; // Calculate swipe distance
 
-        Debug.Log("Swipe" + swipeDistance);
+        //Debug.Log("Swipe" + swipeDistance);
         if (swipeDistance > playerData.swipeDistanceThreshold && swipeTime < playerData.swipeTimeThreshold)
         {
            ActionHelper.onMove.Invoke(touchDelta, swipeDistance, playerData.swipeDistanceThreshold);
