@@ -28,7 +28,7 @@ namespace state
             {
                 ballController.LoseLife();
 
-                if (ballController.Lives > 0)
+                if (ballController.playerData.life > 0)
                 {
                     ballController.StateMachine.ChangeState(new RespawnState(ballController));
                 }

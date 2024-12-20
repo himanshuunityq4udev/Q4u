@@ -6,24 +6,20 @@ public class ActionHelper : MonoBehaviour
     //PlayerInput Script -> Ball Script
     public static Action<Vector2, float, float> onMove;
 
-    //Ball Script -> Health Script
-    public static Action deductLife;
-
-
     //Life Script -> Health Script,BallsLifeManager
     public static Action addLife;
 
-    //HealthScript ->ballLifeManager script
+    //BallController scripts ->ballLifeManager script
     public static Action updateLifeUI;
 
     //HealthScript -> ball script
     public static Action ResetPlayer;
 
-    //RoadGenerator -> lifeSpawnManager Script
+    //RoadGenerator script -> lifeSpawnManager Script
     public static Action SpawnLife;
 
 
-    //UiManager script -> LevelLoader script
+    //UiManager script, Ball controller -> LevelLoader script
     public static Action GoHome;
 
 
@@ -32,10 +28,10 @@ public class ActionHelper : MonoBehaviour
 
     /// ______________UI__________________
 
-    //CollicionHandler script -> UIManager script,coinManager Script, RoadGenerator script
+    //BallController script -> UIManager script,coinManager Script, RoadGenerator script
     public static Action LevelComplete;
 
-    //Ball script -> UIManager script
+    //BallController script -> UIManager script
     public static Action LevelFailed;
 
 
@@ -57,9 +53,9 @@ public class ActionHelper : MonoBehaviour
     public static Action UnlockSky;
     public static Action ResetSkySelection;
 
-    //UIManager Script ->Health Script
+    //UIManager Script ->BallController Script
     public static Action ReviveLife;
 
-    //UImanager script  -> RoadGenerator script, CollisionHandler script
+    //UImanager script  -> BallController script
     public static Action GenerateNewLevel;
 }

@@ -66,7 +66,6 @@ public class LifeSpawnManager : MonoBehaviour
         lifeSpawnPoints = new GameObject[length];
 
         lifeSpawnPoints = GameObject.FindGameObjectsWithTag("LifeSpawnPoint");
-
        
             for (int i = 0; i < lifeSpawnPoints.Length; i++) 
             { 

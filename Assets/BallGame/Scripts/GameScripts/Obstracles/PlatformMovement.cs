@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening; // Make sure to import DOTween
 
 public class PlatformMovement : MonoBehaviour
 {
@@ -10,14 +11,9 @@ public class PlatformMovement : MonoBehaviour
     public float platformRange = 3;
 
     /// <summary>
-    /// Which direction the platform will move
-    /// </summary>
-    private float platformDirection = 1;
-
-    /// <summary>
     /// How fast the platform will move
     /// </summary>
-    [SerializeField] private float platformStep = 1;
+    [SerializeField] private float platformStep = 1.5f;
 
     /// <summary>
     /// Where the platform starts
@@ -34,68 +30,73 @@ public class PlatformMovement : MonoBehaviour
     /// </summary>
     public bool moveUpDown = false;
 
+    /// <summary>
+    /// The ease type for the platform movement
+    /// </summary>
+    public Ease platformEase = Ease.InOutSine;
 
-    // Start is called before the first frame update
+    /// <summary>
+    /// The loop type for the platform movement
+    /// </summary>
+    public LoopType platformLoopType = LoopType.Yoyo;
+
+    /// <summary>
+    /// Delay in seconds after reaching each endpoint
+    /// </summary>
+    public float platformDelay = 1f;
+
+    private Tween platformTween;
+
     void Start()
     {
         startingPosition = transform.localPosition;
+        StartMovement();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void StartMovement()
     {
-        // Determine movement axis based on the active mode
+        // Determine the movement axis and the target position based on the mode
         Vector3 movementAxis;
 
         if (moveUpDown)
         {
-            movementAxis = transform.up; // Vertical movement
+            movementAxis = Vector3.up;
         }
         else if (moveForwardBackward)
         {
-            movementAxis = transform.forward; // Forward-backward movement
+            movementAxis = Vector3.forward;
         }
         else
         {
-            movementAxis = transform.right; // Left-right movement
+            movementAxis = Vector3.right;
         }
 
-        // Check range and change direction if necessary
-        if (moveUpDown)
-        {
-            if (transform.localPosition.y > startingPosition.y + platformRange)
-            {
-                platformDirection = -1;
-            }
-            else if (transform.localPosition.y < startingPosition.y - platformRange)
-            {
-                platformDirection = 1;
-            }
-        }
-        else if (moveForwardBackward)
-        {
-            if (transform.localPosition.z > startingPosition.z + platformRange)
-            {
-                platformDirection = -1;
-            }
-            else if (transform.localPosition.z < startingPosition.z - platformRange)
-            {
-                platformDirection = 1;
-            }
-        }
-        else
-        {
-            if (transform.localPosition.x > startingPosition.x + platformRange)
-            {
-                platformDirection = -1;
-            }
-            else if (transform.localPosition.x < startingPosition.x - platformRange)
-            {
-                platformDirection = 1;
-            }
-        }
+        Vector3 targetPosition1 = startingPosition + movementAxis * platformRange;
+        Vector3 targetPosition2 = startingPosition - movementAxis * platformRange;
 
-        // Apply movement
-        transform.Translate(movementAxis * Time.deltaTime * platformStep * platformDirection, Space.World);
+        // Create a looping tween with delays between movements
+        platformTween = transform.DOLocalMove(targetPosition1, platformRange / platformStep)
+            .SetEase(platformEase)
+            .OnComplete(() =>
+            {
+                DOVirtual.DelayedCall(platformDelay, () =>
+                {
+                    transform.DOLocalMove(targetPosition2, platformRange / platformStep)
+                        .SetEase(platformEase)
+                        .OnComplete(() =>
+                        {
+                            DOVirtual.DelayedCall(platformDelay, StartMovement);
+                        });
+                });
+            });
+    }
+
+    private void OnDestroy()
+    {
+        // Clean up the tween when the object is destroyed
+        if (platformTween != null && platformTween.IsActive())
+        {
+            platformTween.Kill();
+        }
     }
 }

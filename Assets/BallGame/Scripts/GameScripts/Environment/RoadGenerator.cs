@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class RoadGenerator : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class RoadGenerator : MonoBehaviour
     {
         public GameObject prefab; // Plank prefab
     }
-
+    [SerializeField] TMP_Text levelText;
     public List<Plank> allPlanks = new List<Plank>(); // List of all planks
     public Transform startPlankPosition;             // Start position for the road
     public int playerLevel = 1;                      // Current player level
@@ -22,40 +23,42 @@ public class RoadGenerator : MonoBehaviour
 
     void Start()
     {
-        if (PlayerPrefs.HasKey("PlayerLevel"))
-        {
-            playerLevel = PlayerPrefs.GetInt("PlayerLevel");
-        }
-        else
-        {
-            PlayerPrefs.SetInt("PlayerLevel", playerLevel);
-            PlayerPrefs.Save();
-        }
-        if (PlayerPrefs.HasKey("MaxPlanks"))
-        {
-            maxPlanks = PlayerPrefs.GetInt("MaxPlanks");
-        }
-        else
-        {
-            PlayerPrefs.SetInt("MaxPlanks", maxPlanks);
-            PlayerPrefs.Save();
-        }
+
+        //if (PlayerPrefs.HasKey("PlayerLevel"))
+        //{
+        //    playerLevel = PlayerPrefs.GetInt("PlayerLevel");
+        //}
+        //else
+        //{
+        //    PlayerPrefs.SetInt("PlayerLevel", playerLevel);
+        //    PlayerPrefs.Save();
+        //}
+        //if (PlayerPrefs.HasKey("MaxPlanks"))
+        //{
+        //    maxPlanks = PlayerPrefs.GetInt("MaxPlanks");
+        //}
+        //else
+        //{
+        //    PlayerPrefs.SetInt("MaxPlanks", maxPlanks);
+        //    PlayerPrefs.Save();
+        //}
+
+        //levelText.text = "LEVEL " + playerLevel; ;
         GenerateRoad();
+
     }
 
     private void OnEnable()
     {
         ActionHelper.LevelComplete += IncreasePlayerLevel;
-        ActionHelper.GenerateNewLevel += GenerateRoad;
     }
 
     private void OnDisable()
     {
         ActionHelper.LevelComplete -= IncreasePlayerLevel;
-        ActionHelper.GenerateNewLevel -= GenerateRoad;
-
-
     }
+
+    [ContextMenu("Generate")]   
     public void GenerateRoad()
     {
         // Initialize the plank count dictionary
@@ -118,7 +121,9 @@ public class RoadGenerator : MonoBehaviour
             PlacePlank(endPlank);
         }
 
+        
         ActionHelper.SpawnLife?.Invoke();
+        
         // Cleanup
         Destroy(currentEndTransform.gameObject);
     }

@@ -18,8 +18,16 @@ namespace state
             ballController.ShowGameOverScreen();
         }
 
-        public void Execute() { }
+        public void Execute()
+        {   
+            if(ballController.playerData.life == ballController.playerData.totalLife)
+            {
+                ballController.StateMachine.ChangeState(new RespawnState(ballController));
+            }
+        }
 
-        public void Exit() { }
+        public void Exit() {
+
+        }
     }
 }

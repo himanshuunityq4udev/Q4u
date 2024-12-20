@@ -6,48 +6,56 @@ namespace state
     {
         public float moveSpeed = 10f; // Speed multiplier
         public StateMachine StateMachine { get; private set; }
-        public int Lives { get; private set; } = 4;
-        public Transform respawnPoint;
+
+        [SerializeField] int revivalAmount = 200;
 
         private Rigidbody rb;
-        private Vector2 moveInput;
-        private BallInputActions inputActions;
+
+        public PlayerData playerData;
+
+        PlayerInput playerInput;
+        [SerializeField] private GameObject cam1;
+        [SerializeField] private GameObject cam2;
+
+        bool isLevelComplete;
+
 
 
         private void Awake()
         {
             rb = GetComponent<Rigidbody>();
-            inputActions = new BallInputActions();
-
-            // Bind the Move action
-            inputActions.Player.Move.performed += ctx => moveInput = ctx.ReadValue<Vector2>();
-            inputActions.Player.Move.canceled += ctx => moveInput = Vector2.zero;
+            playerInput = GetComponent<PlayerInput>();
         }
+
+
 
 
         private void Start()
         {
-    
+
             StateMachine = new StateMachine();
             StateMachine.ChangeState(new PlayingState(this));
         }
+
+        private void OnEnable()
+        {
+            ActionHelper.ReviveLife += ReviveLife;
+            ActionHelper.GenerateNewLevel += GenerateNextLevel;
+        }
+        private void OnDisable()
+        {
+            ActionHelper.ReviveLife -= ReviveLife;
+            ActionHelper.GenerateNewLevel -= GenerateNextLevel;
+
+        }
+
+ 
+
 
         private void Update()
         {
             StateMachine.Update();
         }
-
-
-        private void FixedUpdate()
-        {
-            // Apply movement in FixedUpdate
-            if (StateMachine.GetType() == typeof(PlayingState) && moveInput != Vector2.zero)
-            {
-                Vector3 movement = new Vector3(moveInput.x, 0, moveInput.y) * moveSpeed;
-                rb.AddForce(movement, ForceMode.Force);
-            }
-        }
-
 
 
         public void EnableBallControl(bool enable)
@@ -57,8 +65,7 @@ namespace state
 
         public bool IsAtFinishLine()
         {
-            // Implement logic to check if the ball has reached the finish line
-            return false;
+            return isLevelComplete;
         }
 
         public bool IsFallen()
@@ -69,27 +76,77 @@ namespace state
 
         public void LoseLife()
         {
-            Lives--;
-            Debug.Log("Lives remaining: " + Lives);
+            playerData.life--;
+            ActionHelper.updateLifeUI?.Invoke();
+            Debug.Log("Lives remaining: " + playerData.life);
         }
 
-        public void Respawn()
-        {
-            transform.position = respawnPoint.position;
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-            Debug.Log("Respawned");
-        }
 
         public void ShowWinScreen()
         {
             // Show the win screen UI
+            ActionHelper.LevelComplete?.Invoke();
         }
 
         public void ShowGameOverScreen()
         {
             // Show the game over screen UI
+            ActionHelper.LevelFailed?.Invoke();
         }
+
+        private void GenerateNextLevel()
+        {
+            isLevelComplete = false;
+            ActionHelper.GoHome?.Invoke();
+            StateMachine.ChangeState(new RespawnState(this));
+            playerInput.enabled = true;
+            cam1.SetActive(true);
+            cam2.SetActive(false);
+           
+        }
+
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Finish"))
+            {
+                Debug.Log("Complete");
+                transform.rotation = Quaternion.Euler(0, 0, 0);
+                rb.angularVelocity = Vector3.zero;
+                rb.linearVelocity = Vector3.zero;
+                playerInput.enabled = false;
+                cam1.SetActive(false);
+                cam2.SetActive(true);
+                isLevelComplete = true;
+            }
+           
+        }
+
+
+        #region ------------RESET THE BALL ---------------
+
+        public void Respawn()
+        {
+            transform.position = playerData.respawnPosition;
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            Debug.Log("Respawned");
+        }
+
+        public void ReviveLife()
+        {
+            if (MoneyManager.Instance.playerInfo.money > revivalAmount)
+            {
+                MoneyManager.Instance.SpendMoney(revivalAmount);
+                playerData.life = playerData.totalLife;
+                ActionHelper.updateLifeUI?.Invoke();
+            }
+            else
+            {
+                ActionHelper.DontHaveEnoughCoins?.Invoke();
+            }
+        }
+        #endregion
     }
 
 }

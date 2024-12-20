@@ -5,7 +5,6 @@ public class Ball : MonoBehaviour
     [SerializeField] private PlayerData playerData;
 
     private Rigidbody ballRigidbody;
-    bool isLevelFailed =  false;
 
     #region ------------Unity Callbacks---------------
 
@@ -20,23 +19,13 @@ public class Ball : MonoBehaviour
     private void OnEnable()
     {
         ActionHelper.onMove += MoveBall;
-        ActionHelper.ResetPlayer += ResetBall;
     }
     private void OnDisable()
     {
         ActionHelper.onMove -= MoveBall;
-        ActionHelper.ResetPlayer -= ResetBall;
 
     }
 
-    private void Update()
-    {
-        if (!isLevelFailed)
-        {
-            ResetBall();
-        }
-
-    }
     #endregion
 
     #region ------------MOVE THE BALL ---------------
@@ -71,53 +60,5 @@ public class Ball : MonoBehaviour
     }
 
 
-    #endregion
-
-    #region ------------RESET THE BALL ---------------
-
-    public void ResetBall()
-    {
-        // Check if the ball has fallen below a threshold
-        if (transform.position.y >= -30)
-            return;
-
-        if (playerData.life > 0)
-        {
-            HandleBallRespawn();
-        }
-        else
-        {
-            HandleBallDestruction();
-        }
-    }
-
-    // Handles ball respawn logic
-    private void HandleBallRespawn()
-    {
-        ActionHelper.deductLife?.Invoke();
-        ActionHelper.SpawnLife?.Invoke();
-        transform.position = playerData.respawnPosition;
-        StopTheBall();
-        isLevelFailed = false;
-        ballRigidbody.isKinematic = false;
-        ballRigidbody.useGravity = true;
-    }
-    // Handles ball destruction logic
-    private void HandleBallDestruction()
-    {
-        StopTheBall();
-        ballRigidbody.isKinematic = true;
-        ballRigidbody.useGravity = false;
-        ActionHelper.LevelFailed?.Invoke();
-        isLevelFailed = true;
-    }
-
-    //Make the ball velocity zero
-    public void StopTheBall()
-    {
-        transform.rotation = Quaternion.Euler(0, 0, 0);
-        ballRigidbody.angularVelocity = Vector3.zero;
-        ballRigidbody.linearVelocity = Vector3.zero;
-    }
     #endregion
 }

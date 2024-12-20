@@ -42,7 +42,7 @@ public class UiManager : MonoBehaviour
     [SerializeField] private Button NextButton;
 
 
-
+    [SerializeField] private PlayerData playerData;
 
 
     [Header("Buttons GameObject")]
@@ -198,6 +198,7 @@ public class UiManager : MonoBehaviour
     }
     public void OnNextButtonClicked()
     {
+
         ActionHelper.GenerateNewLevel?.Invoke();
         menuController.PopPage();
     }
