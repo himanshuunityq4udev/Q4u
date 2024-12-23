@@ -1,51 +1,39 @@
+
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
 public class RoadGenerator : MonoBehaviour
 {
-    [System.Serializable]
-    public class Plank
+    [SerializeField] private TMP_Text levelText;          // Text to display the current level
+    [SerializeField] private Transform startPlankPosition; // Start position for the road
+    [SerializeField] private List<GameObject> plainPlanks; // List of plain planks
+    [SerializeField] private List<GameObject> coinPlanks;  // List of planks with coins
+    [SerializeField] private List<GameObject> lifePlanks;  // List of planks with life
+    [SerializeField] private GameObject startPlankPrefab;  // Start plank prefab
+    [SerializeField] private GameObject endPlankPrefab;    // End plank prefab
+    [SerializeField] private int minPlanks = 10;           // Minimum planks in a road
+    [SerializeField] private int maxPlanks = 20;           // Maximum planks in a road
+
+    private int playerLevel = 1;                          // Current player level
+    private Transform currentEndTransform;                // Tracks the end position and rotation
+
+    public bool canGenerate = false;
+
+
+    private void Awake()
     {
-        public GameObject prefab; // Plank prefab
+        playerLevel = PlayerPrefs.GetInt("PlayerLevel", 1);
+        maxPlanks = PlayerPrefs.GetInt("MaxPlanks", maxPlanks);
     }
-    [SerializeField] TMP_Text levelText;
-    public List<Plank> allPlanks = new List<Plank>(); // List of all planks
-    public Transform startPlankPosition;             // Start position for the road
-    public int playerLevel = 1;                      // Current player level
-    public int minPlanks = 5;                        // Minimum number of planks in a road
-    public int maxPlanks = 10;                       // Maximum number of planks in a road
-    public Plank startPlank;                         // First plank of the road
-    public Plank endPlank;                           // Last plank of the road
 
-    private Transform currentEndTransform;           // Tracks the end position and rotation
-    private Dictionary<GameObject, int> plankCounts; // Tracks the count of each plank prefab
-
-    void Start()
+    private void Start()
     {
-
-        //if (PlayerPrefs.HasKey("PlayerLevel"))
-        //{
-        //    playerLevel = PlayerPrefs.GetInt("PlayerLevel");
-        //}
-        //else
-        //{
-        //    PlayerPrefs.SetInt("PlayerLevel", playerLevel);
-        //    PlayerPrefs.Save();
-        //}
-        //if (PlayerPrefs.HasKey("MaxPlanks"))
-        //{
-        //    maxPlanks = PlayerPrefs.GetInt("MaxPlanks");
-        //}
-        //else
-        //{
-        //    PlayerPrefs.SetInt("MaxPlanks", maxPlanks);
-        //    PlayerPrefs.Save();
-        //}
-
-        //levelText.text = "LEVEL " + playerLevel; ;
-        GenerateRoad();
-
+        levelText.text = $"LEVEL {playerLevel}";
+        if (canGenerate)
+        {
+            GenerateRoad();
+        }
     }
 
     private void OnEnable()
@@ -58,104 +46,145 @@ public class RoadGenerator : MonoBehaviour
         ActionHelper.LevelComplete -= IncreasePlayerLevel;
     }
 
-    [ContextMenu("Generate")]   
+    [ContextMenu("Generate")]
     public void GenerateRoad()
     {
-        // Initialize the plank count dictionary
-        plankCounts = new Dictionary<GameObject, int>();
+        SetupStartPosition();
 
-        // Add all planks from the list
-        foreach (var plank in allPlanks)
-        {
-            if (!plankCounts.ContainsKey(plank.prefab))
-                plankCounts[plank.prefab] = 0;
-        }
-
-        // Add start and end planks if not already in the dictionary
-        if (startPlank != null && !plankCounts.ContainsKey(startPlank.prefab))
-        {
-            plankCounts[startPlank.prefab] = 0;
-        }
-
-        if (endPlank != null && !plankCounts.ContainsKey(endPlank.prefab))
-        {
-            plankCounts[endPlank.prefab] = 0;
-        }
-
-        // Reset position
-        currentEndTransform = new GameObject("CurrentEnd").transform;
-        currentEndTransform.position = startPlankPosition.position;
-        currentEndTransform.rotation = startPlankPosition.rotation;
-
-        // Clear existing road (if any)
+        // Clear existing road
         foreach (Transform child in transform)
         {
             Destroy(child.gameObject);
         }
 
-        // Adjust maxPlanks based on player level
+        // Adjust max planks based on player level
         maxPlanks = Mathf.Clamp(maxPlanks + (playerLevel / 10), minPlanks, 50);
 
         // Generate road
-        int plankCount = Random.Range(minPlanks, maxPlanks + 1);
+        if (startPlankPrefab) PlacePlank(startPlankPrefab);
+        GenerateMiddlePlanks();
+        if (endPlankPrefab) PlacePlank(endPlankPrefab);
 
-        // Add the starting plank
-        if (startPlank != null)
-        {
-            PlacePlank(startPlank);
-        }
-
-        // Generate middle planks based on the player's level
-        for (int i = 0; i < plankCount; i++)
-        {
-            Plank randomPlank = GetRandomPlankForLevel(playerLevel);
-            if (randomPlank != null)
-            {
-                PlacePlank(randomPlank);
-            }
-        }
-
-        // Add the ending plank
-        if (endPlank != null)
-        {
-            PlacePlank(endPlank);
-        }
-
-        
         ActionHelper.SpawnLife?.Invoke();
-        
-        // Cleanup
-        Destroy(currentEndTransform.gameObject);
     }
 
-    private void PlacePlank(Plank plank)
+    private void SetupStartPosition()
     {
-        // Instantiate the plank at the current end position and rotation
-        GameObject plankObject = Instantiate(plank.prefab, currentEndTransform.position, currentEndTransform.rotation, transform);
-
-        // Update the count for the placed plank
-        if (plankCounts.ContainsKey(plank.prefab))
+        if (currentEndTransform == null)
         {
-            plankCounts[plank.prefab]++;
+            currentEndTransform = new GameObject("CurrentEnd").transform;
         }
-        else
+        currentEndTransform.position = startPlankPosition.position;
+        currentEndTransform.rotation = startPlankPosition.rotation;
+    }
+
+    private void GenerateMiddlePlanks()
+    {
+        int totalPlanks = Random.Range(minPlanks, maxPlanks + 1);
+        int coinPlankCount = Random.Range(3, 6); // 3-5 coin planks
+        int lifePlankCount = 2;                 // 2 life planks
+        int plainPlankCount = totalPlanks - coinPlankCount - lifePlankCount;
+
+        // Place coin planks
+        for (int i = 0; i < coinPlankCount; i++)
         {
-            Debug.LogError($"Plank prefab {plank.prefab.name} is not in the plankCounts dictionary.");
-            return;
+            GameObject plank = GetRandomPlank(coinPlanks);
+            if (plank) PlacePlank(plank);
         }
 
-        // Find the "End" child transform in the instantiated plank
-        Transform endTransform = plankObject.transform.Find("End");
-        if (endTransform != null)
+        // Place life planks
+        for (int i = 0; i < lifePlankCount; i++)
         {
-            // Update current end transform to the new end position and rotation
+            GameObject plank = GetRandomPlank(lifePlanks);
+            if (plank) PlacePlank(plank);
+        }
+
+        // Place plain planks
+        for (int i = 0; i < plainPlankCount; i++)
+        {
+            GameObject plank = GetRandomPlank(plainPlanks);
+            if (plank) PlacePlank(plank);
+        }
+
+        //int totalPlanks = Random.Range(minPlanks, maxPlanks + 1);
+        //int coinPlankCount = Random.Range(3, 6); // 3-5 coin planks
+        //int lifePlankCount = 2;                 // 2 life planks
+        //int plainPlankCount = totalPlanks - coinPlankCount - lifePlankCount;
+
+        //// Create a list of indices for plank placement
+        //List<int> plankIndices = new List<int>();
+        //for (int i = 0; i < totalPlanks; i++)
+        //{
+        //    plankIndices.Add(i);
+        //}
+
+        //// Shuffle the indices
+        //ShuffleList(plankIndices);
+
+        //// Reserve positions for life planks
+        //List<int> lifePlankPositions = plankIndices.GetRange(0, lifePlankCount);
+
+        //// Reserve positions for coin planks
+        //List<int> coinPlankPositions = plankIndices.GetRange(lifePlankCount, coinPlankCount);
+
+        //// Generate planks
+        //for (int i = 0; i < totalPlanks; i++)
+        //{
+        //    GameObject plank = null;
+
+        //    if (lifePlankPositions.Contains(i))
+        //    {
+        //        plank = GetRandomPlank(lifePlanks); // Place a life plank
+        //    }
+        //    else if (coinPlankPositions.Contains(i))
+        //    {
+        //        plank = GetRandomPlank(coinPlanks); // Place a coin plank
+        //    }
+        //    else
+        //    {
+        //        plank = GetRandomPlank(plainPlanks); // Place a plain plank
+        //    }
+
+        //    if (plank != null) PlacePlank(plank);
+        //}
+    }
+
+    // Helper method to shuffle a list
+    private void ShuffleList<T>(List<T> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            int randomIndex = Random.Range(i, list.Count);
+            T temp = list[i];
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
+        }
+    }
+
+    private void PlacePlank(GameObject plankPrefab)
+    {
+        GameObject plank = Instantiate(plankPrefab, currentEndTransform.position, currentEndTransform.rotation, transform);
+
+        Transform endTransform = plank.transform.Find("End");
+        if (endTransform)
+        {
             currentEndTransform.position = endTransform.position;
             currentEndTransform.rotation = endTransform.rotation;
         }
         else
         {
-            Debug.LogWarning($"Plank {plank.prefab.name} is missing an 'End' child transform.");
+            Debug.LogWarning($"Plank {plankPrefab.name} is missing an 'End' transform.");
         }
+    }
+
+    private GameObject GetRandomPlank(List<GameObject> planks)
+    {
+        if (planks.Count == 0)
+        {
+            Debug.LogWarning("No planks available in the provided list.");
+            return null;
+        }
+        return planks[Random.Range(0, planks.Count)];
     }
 
     public void IncreasePlayerLevel()
@@ -163,329 +192,144 @@ public class RoadGenerator : MonoBehaviour
         playerLevel++;
         PlayerPrefs.SetInt("PlayerLevel", playerLevel);
         PlayerPrefs.SetInt("MaxPlanks", maxPlanks);
-
-
-    }
-
-    private Plank GetRandomPlankForLevel(int level)
-    {
-        // Determine the range of planks based on level
-        int maxPlankIndex = Mathf.Clamp(level / 10 * 5, 5, allPlanks.Count);
-
-        // Get a list of planks that haven't exceeded the limit
-        List<Plank> eligiblePlanks = new List<Plank>();
-
-        for (int i = 0; i < maxPlankIndex; i++)
-        {
-            var plank = allPlanks[i];
-            if (plankCounts.ContainsKey(plank.prefab) && plankCounts[plank.prefab] < 2)
-            {
-                eligiblePlanks.Add(plank);
-            }
-        }
-
-        if (eligiblePlanks.Count == 0)
-        {
-            Debug.LogWarning("No eligible planks available for placement.");
-            return null;
-        }
-
-        // Randomly select an eligible plank
-        int randomIndex = Random.Range(0, eligiblePlanks.Count);
-        return eligiblePlanks[randomIndex];
     }
 }
 
 
+
 //using System.Collections.Generic;
 //using UnityEngine;
+//using TMPro;
 
 //public class RoadGenerator : MonoBehaviour
 //{
-//    [System.Serializable]
-//    public class Plank
+//    [SerializeField] private TMP_Text levelText;          // Text to display the current level
+//    [SerializeField] private Transform startPlankPosition; // Start position for the road
+//    [SerializeField] private List<GameObject> allPlanks;   // List of all plank prefabs
+//    [SerializeField] private GameObject startPlankPrefab;  // Start plank prefab
+//    [SerializeField] private GameObject endPlankPrefab;    // End plank prefab
+//    [SerializeField] private int minPlanks = 5;            // Minimum planks in a road
+//    [SerializeField] private int maxPlanks = 10;           // Maximum planks in a road
+
+//    private int playerLevel = 1;                          // Current player level
+//    private Transform currentEndTransform;                // Tracks the end position and rotation
+//    private Dictionary<GameObject, int> plankCounts;      // Tracks counts of placed planks
+
+//    private void Awake()
 //    {
-//        public GameObject prefab; // Plank prefab
+//        // Load player level and max planks from PlayerPrefs
+//        playerLevel = PlayerPrefs.GetInt("PlayerLevel", 1);
+//        maxPlanks = PlayerPrefs.GetInt("MaxPlanks", maxPlanks);
 //    }
 
-//    public List<Plank> allPlanks = new List<Plank>(); // List of all planks
-//    public Transform startPlankPosition;             // Start position for the road
-//    public int playerLevel = 1;                      // Current player level
-//    public int minPlanks = 5;                        // Minimum number of planks in a road
-//    public int maxPlanks = 10;                       // Maximum number of planks in a road
-//    public Plank startPlank;                         // First plank of the road
-//    public Plank endPlank;                           // Last plank of the road
-
-//    private Transform currentEndTransform;           // Tracks the end position and rotation
-//    private Dictionary<GameObject, int> plankCounts; // Tracks the count of each plank prefab
-
-//    void Start()
+//    private void Start()
 //    {
+//        levelText.text = $"LEVEL {playerLevel}";
 //        GenerateRoad();
 //    }
 
+//    private void OnEnable()
+//    {
+//        ActionHelper.LevelComplete += IncreasePlayerLevel;
+//    }
+
+//    private void OnDisable()
+//    {
+//        ActionHelper.LevelComplete -= IncreasePlayerLevel;
+//    }
+
+//    [ContextMenu("Generate")]
 //    public void GenerateRoad()
 //    {
-//        // Initialize the plank count dictionary
-//        plankCounts = new Dictionary<GameObject, int>();
+//        // Initialize plank counts and prepare for road generation
+//        InitializePlankCounts();
 
-//        // Add all planks from the list
-//        foreach (var plank in allPlanks)
-//        {
-//            if (!plankCounts.ContainsKey(plank.prefab))
-//                plankCounts[plank.prefab] = 0;
-//        }
+//        // Set starting position
+//        SetupStartPosition();
 
-//        // Add start and end planks if not already in the dictionary
-//        if (startPlank != null && !plankCounts.ContainsKey(startPlank.prefab))
-//        {
-//            plankCounts[startPlank.prefab] = 0;
-//        }
-
-//        if (endPlank != null && !plankCounts.ContainsKey(endPlank.prefab))
-//        {
-//            plankCounts[endPlank.prefab] = 0;
-//        }
-
-//        // Reset position
-//        currentEndTransform = new GameObject("CurrentEnd").transform;
-//        currentEndTransform.position = startPlankPosition.position;
-//        currentEndTransform.rotation = startPlankPosition.rotation;
-
-//        // Clear existing road (if any)
+//        // Clear existing road
 //        foreach (Transform child in transform)
 //        {
 //            Destroy(child.gameObject);
 //        }
 
+//        // Adjust max planks based on player level
+//        maxPlanks = Mathf.Clamp(maxPlanks + (playerLevel / 10), minPlanks, 50);
+
 //        // Generate road
-//        int plankCount = Random.Range(minPlanks, maxPlanks + 1);
-
-//        // Add the starting plank
-//        if (startPlank != null)
-//        {
-//            PlacePlank(startPlank);
-//        }
-
-//        // Generate middle planks based on the player's level
-//        for (int i = 0; i < plankCount; i++)
-//        {
-//            Plank randomPlank = GetRandomPlankForLevel(playerLevel);
-//            if (randomPlank != null)
-//            {
-//                PlacePlank(randomPlank);
-//            }
-//        }
-
-//        // Add the ending plank
-//        if (endPlank != null)
-//        {
-//            PlacePlank(endPlank);
-//        }
+//        if (startPlankPrefab) PlacePlank(startPlankPrefab);
+//        GenerateMiddlePlanks();
+//        if (endPlankPrefab) PlacePlank(endPlankPrefab);
 
 //        ActionHelper.SpawnLife?.Invoke();
-//        // Cleanup
-//        Destroy(currentEndTransform.gameObject);
 //    }
 
-//    private void PlacePlank(Plank plank)
+//    private void InitializePlankCounts()
 //    {
-//        // Instantiate the plank at the current end position and rotation
-//        GameObject plankObject = Instantiate(plank.prefab, currentEndTransform.position, currentEndTransform.rotation, transform);
-
-//        // Update the count for the placed plank
-//        if (plankCounts.ContainsKey(plank.prefab))
-//        {
-//            plankCounts[plank.prefab]++;
-//        }
-//        else
-//        {
-//            Debug.LogError($"Plank prefab {plank.prefab.name} is not in the plankCounts dictionary.");
-//            return;
-//        }
-
-//        // Find the "End" child transform in the instantiated plank
-//        Transform endTransform = plankObject.transform.Find("End");
-//        if (endTransform != null)
-//        {
-//            // Update current end transform to the new end position and rotation
-//            currentEndTransform.position = endTransform.position;
-//            currentEndTransform.rotation = endTransform.rotation;
-//        }
-//        else
-//        {
-//            Debug.LogWarning($"Plank {plank.prefab.name} is missing an 'End' child transform.");
-//        }
-//    }
-
-//    private Plank GetRandomPlankForLevel(int level)
-//    {
-//        // Determine eligible planks based on the player's level
-//        List<Plank> eligiblePlanks = new List<Plank>();
-
-//        if (level < 10)
-//        {
-//            // Select planks 1 to 5
-//            eligiblePlanks.AddRange(allPlanks.GetRange(0, Mathf.Min(5, allPlanks.Count)));
-//        }
-//        else if (level < 20)
-//        {
-//            // Select planks 1 to 10
-//            eligiblePlanks.AddRange(allPlanks.GetRange(0, Mathf.Min(10, allPlanks.Count)));
-//        }
-//        else
-//        {
-//            // Select all planks
-//            eligiblePlanks.AddRange(allPlanks);
-//        }
-
-//        // Remove planks that have reached their limit
-//        eligiblePlanks.RemoveAll(plank => plankCounts.ContainsKey(plank.prefab) && plankCounts[plank.prefab] >= 2);
-
-//        if (eligiblePlanks.Count == 0)
-//        {
-//            Debug.LogWarning("No eligible planks available for placement.");
-//            return null;
-//        }
-
-//        // Randomly select an eligible plank
-//        int randomIndex = Random.Range(0, eligiblePlanks.Count);
-//        return eligiblePlanks[randomIndex];
-//    }
-//}
-
-
-
-
-//using System.Collections.Generic;
-//using UnityEngine;
-
-//public class RoadGenerator : MonoBehaviour
-//{
-//    [System.Serializable]
-//    public class Plank
-//    {
-//        public GameObject prefab; // Plank prefab
-//    }
-
-//    public List<Plank> allPlanks = new List<Plank>(); // List of all planks
-//    public Transform startPlankPosition;             // Start position for the road
-//    public int playerLevel = 1;                      // Current player level
-//    public int minPlanks = 5;                        // Minimum number of planks in a road
-//    public int maxPlanks = 10;                       // Maximum number of planks in a road
-//    public Plank startPlank;                         // First plank of the road
-//    public Plank endPlank;                           // Last plank of the road
-
-//    private Transform currentEndTransform;           // Tracks the end position and rotation
-//    private Dictionary<GameObject, int> plankCounts; // Tracks the count of each plank prefab
-
-//    void Start()
-//    {
-//        GenerateRoad();
-//    }
-
-//    public void GenerateRoad()
-//    {
-//        // Initialize the plank count dictionary
 //        plankCounts = new Dictionary<GameObject, int>();
 
-//        // Add all planks from the list
-//        foreach (var plank in allPlanks)
+//        foreach (var plankPrefab in allPlanks)
 //        {
-//            if (!plankCounts.ContainsKey(plank.prefab))
-//                plankCounts[plank.prefab] = 0;
+//            plankCounts[plankPrefab] = 0;
 //        }
 
-//        // Add start and end planks if not already in the dictionary
-//        if (startPlank != null && !plankCounts.ContainsKey(startPlank.prefab))
-//        {
-//            plankCounts[startPlank.prefab] = 0;
-//        }
-
-//        if (endPlank != null && !plankCounts.ContainsKey(endPlank.prefab))
-//        {
-//            plankCounts[endPlank.prefab] = 0;
-//        }
-
-//        // Reset position
-//        currentEndTransform = new GameObject("CurrentEnd").transform;
-//        currentEndTransform.position = startPlankPosition.position;
-//        currentEndTransform.rotation = startPlankPosition.rotation;
-
-//        // Clear existing road (if any)
-//        foreach (Transform child in transform)
-//        {
-//            Destroy(child.gameObject);
-//        }
-
-//        // Generate road
-//        int plankCount = Random.Range(minPlanks, maxPlanks + 1);
-
-//        // Add the starting plank
-//        if (startPlank != null)
-//        {
-//            PlacePlank(startPlank);
-//        }
-
-//        // Generate middle planks based on the player's level
-//        for (int i = 0; i < plankCount; i++)
-//        {
-//            Plank randomPlank = GetRandomPlankForLevel(playerLevel);
-//            if (randomPlank != null)
-//            {
-//                PlacePlank(randomPlank);
-//            }
-//        }
-
-//        // Add the ending plank
-//        if (endPlank != null)
-//        {
-//            PlacePlank(endPlank);
-//        }
-
-//        ActionHelper.SpawnLife?.Invoke();
-//        // Cleanup
-//        Destroy(currentEndTransform.gameObject);
+//        if (startPlankPrefab) plankCounts[startPlankPrefab] = 0;
+//        if (endPlankPrefab) plankCounts[endPlankPrefab] = 0;
 //    }
 
-//    private void PlacePlank(Plank plank)
+//    private void SetupStartPosition()
 //    {
-//        // Instantiate the plank at the current end position and rotation
-//        GameObject plankObject = Instantiate(plank.prefab, currentEndTransform.position, currentEndTransform.rotation, transform);
-
-//        // Update the count for the placed plank
-//        if (plankCounts.ContainsKey(plank.prefab))
+//        if (currentEndTransform == null)
 //        {
-//            plankCounts[plank.prefab]++;
+//            currentEndTransform = new GameObject("CurrentEnd").transform;
 //        }
-//        else
-//        {
-//            Debug.LogError($"Plank prefab {plank.prefab.name} is not in the plankCounts dictionary.");
-//            return;
-//        }
+//        currentEndTransform.position = startPlankPosition.position;
+//        currentEndTransform.rotation = startPlankPosition.rotation;
+//    }
 
-//        // Find the "End" child transform in the instantiated plank
-//        Transform endTransform = plankObject.transform.Find("End");
-//        if (endTransform != null)
+//    private void GenerateMiddlePlanks()
+//    {
+//        int plankCount = Random.Range(minPlanks, maxPlanks + 1);
+//        for (int i = 0; i < plankCount; i++)
 //        {
-//            // Update current end transform to the new end position and rotation
+//            GameObject randomPlank = GetRandomPlankForLevel(playerLevel);
+//            if (randomPlank) PlacePlank(randomPlank);
+//        }
+//    }
+
+//    private void PlacePlank(GameObject plankPrefab)
+//    {
+//        GameObject plank = Instantiate(plankPrefab, currentEndTransform.position, currentEndTransform.rotation, transform);
+//        plankCounts[plankPrefab]++;
+
+//        Transform endTransform = plank.transform.Find("End");
+//        if (endTransform)
+//        {
 //            currentEndTransform.position = endTransform.position;
 //            currentEndTransform.rotation = endTransform.rotation;
 //        }
 //        else
 //        {
-//            Debug.LogWarning($"Plank {plank.prefab.name} is missing an 'End' child transform.");
+//            Debug.LogWarning($"Plank {plankPrefab.name} is missing an 'End' transform.");
 //        }
 //    }
 
-//    private Plank GetRandomPlankForLevel(int level)
+//    public void IncreasePlayerLevel()
 //    {
-//        // Get a list of planks that haven't exceeded the limit
-//        List<Plank> eligiblePlanks = new List<Plank>();
+//        playerLevel++;
+//        PlayerPrefs.SetInt("PlayerLevel", playerLevel);
+//        PlayerPrefs.SetInt("MaxPlanks", maxPlanks);
+//    }
 
-//        foreach (var plank in allPlanks)
+//    private GameObject GetRandomPlankForLevel(int level)
+//    {
+//        int maxPlankIndex = Mathf.Clamp(level / 10 * 5, 5, allPlanks.Count);
+
+//        List<GameObject> eligiblePlanks = new List<GameObject>();
+//        for (int i = 0; i < maxPlankIndex; i++)
 //        {
-//            if (plankCounts.ContainsKey(plank.prefab) && plankCounts[plank.prefab] < 2)
+//            GameObject plank = allPlanks[i];
+//            if (plankCounts[plank] < 2)
 //            {
 //                eligiblePlanks.Add(plank);
 //            }
@@ -493,12 +337,523 @@ public class RoadGenerator : MonoBehaviour
 
 //        if (eligiblePlanks.Count == 0)
 //        {
-//            Debug.LogWarning("No eligible planks available for placement.");
+//            Debug.LogWarning("No eligible planks available.");
 //            return null;
 //        }
 
-//        // Randomly select an eligible plank
-//        int randomIndex = Random.Range(0, eligiblePlanks.Count);
-//        return eligiblePlanks[randomIndex];
+//        return eligiblePlanks[Random.Range(0, eligiblePlanks.Count)];
 //    }
 //}
+
+////using System.Collections.Generic;
+////using UnityEngine;
+////using TMPro;
+
+////public class RoadGenerator : MonoBehaviour
+////{
+////    [System.Serializable]
+////    public class Plank
+////    {
+////        public GameObject prefab; // Plank prefab
+////    }
+////    [SerializeField] TMP_Text levelText;
+////    public List<Plank> allPlanks = new List<Plank>(); // List of all planks
+////    public Transform startPlankPosition;             // Start position for the road
+////    public int playerLevel = 1;                      // Current player level
+////    public int minPlanks = 5;                        // Minimum number of planks in a road
+////    public int maxPlanks = 10;                       // Maximum number of planks in a road
+////    public Plank startPlank;                         // First plank of the road
+////    public Plank endPlank;                           // Last plank of the road
+
+////    private Transform currentEndTransform;           // Tracks the end position and rotation
+////    private Dictionary<GameObject, int> plankCounts; // Tracks the count of each plank prefab
+
+////    public bool canGenerate = false;
+////    void Awake()
+////    {
+
+////        if (PlayerPrefs.HasKey("PlayerLevel"))
+////        {
+////            playerLevel = PlayerPrefs.GetInt("PlayerLevel");
+////        }
+////        else
+////        {
+////            PlayerPrefs.SetInt("PlayerLevel", playerLevel);
+////            PlayerPrefs.Save();
+////        }
+////        if (PlayerPrefs.HasKey("MaxPlanks"))
+////        {
+////            maxPlanks = PlayerPrefs.GetInt("MaxPlanks");
+////        }
+////        else
+////        {
+////            PlayerPrefs.SetInt("MaxPlanks", maxPlanks);
+////            PlayerPrefs.Save();
+////        }
+////    }
+////    private void Start()
+////    {
+
+////        levelText.text = "LEVEL " + playerLevel;
+////        if (canGenerate)
+////        {
+////            GenerateRoad();
+////        }
+
+////    }
+
+
+////    private void OnEnable()
+////    {
+////        ActionHelper.LevelComplete += IncreasePlayerLevel;
+////    }
+
+////    private void OnDisable()
+////    {
+////        ActionHelper.LevelComplete -= IncreasePlayerLevel;
+////    }
+
+////    [ContextMenu("Generate")]   
+////    public void GenerateRoad()
+////    {
+////        // Initialize the plank count dictionary
+////        plankCounts = new Dictionary<GameObject, int>();
+
+////        // Add all planks from the list
+////        foreach (var plank in allPlanks)
+////        {
+////            if (!plankCounts.ContainsKey(plank.prefab))
+////                plankCounts[plank.prefab] = 0;
+////        }
+
+////        // Add start and end planks if not already in the dictionary
+////        if (startPlank != null && !plankCounts.ContainsKey(startPlank.prefab))
+////        {
+////            plankCounts[startPlank.prefab] = 0;
+////        }
+
+////        if (endPlank != null && !plankCounts.ContainsKey(endPlank.prefab))
+////        {
+////            plankCounts[endPlank.prefab] = 0;
+////        }
+
+////        // Reset position
+////        currentEndTransform = new GameObject("CurrentEnd").transform;
+////        currentEndTransform.position = startPlankPosition.position;
+////        currentEndTransform.rotation = startPlankPosition.rotation;
+
+////        // Clear existing road (if any)
+////        foreach (Transform child in transform)
+////        {
+////            Destroy(child.gameObject);
+////        }
+
+////        // Adjust maxPlanks based on player level
+////        maxPlanks = Mathf.Clamp(maxPlanks + (playerLevel / 10), minPlanks, 50);
+
+////        // Generate road
+////        int plankCount = Random.Range(minPlanks, maxPlanks + 1);
+
+////        // Add the starting plank
+////        if (startPlank != null)
+////        {
+////            PlacePlank(startPlank);
+////        }
+
+////        // Generate middle planks based on the player's level
+////        for (int i = 0; i < plankCount; i++)
+////        {
+////            Plank randomPlank = GetRandomPlankForLevel(playerLevel);
+////            if (randomPlank != null)
+////            {
+////                PlacePlank(randomPlank);
+////            }
+////        }
+
+////        // Add the ending plank
+////        if (endPlank != null)
+////        {
+////            PlacePlank(endPlank);
+////        }
+
+
+////        ActionHelper.SpawnLife?.Invoke();
+
+////        // Cleanup
+////        Destroy(currentEndTransform.gameObject);
+////    }
+
+////    private void PlacePlank(Plank plank)
+////    {
+////        // Instantiate the plank at the current end position and rotation
+////        GameObject plankObject = Instantiate(plank.prefab, currentEndTransform.position, currentEndTransform.rotation, transform);
+
+////        // Update the count for the placed plank
+////        if (plankCounts.ContainsKey(plank.prefab))
+////        {
+////            plankCounts[plank.prefab]++;
+////        }
+////        else
+////        {
+////            Debug.LogError($"Plank prefab {plank.prefab.name} is not in the plankCounts dictionary.");
+////            return;
+////        }
+
+////        // Find the "End" child transform in the instantiated plank
+////        Transform endTransform = plankObject.transform.Find("End");
+////        if (endTransform != null)
+////        {
+////            // Update current end transform to the new end position and rotation
+////            currentEndTransform.position = endTransform.position;
+////            currentEndTransform.rotation = endTransform.rotation;
+////        }
+////        else
+////        {
+////            Debug.LogWarning($"Plank {plank.prefab.name} is missing an 'End' child transform.");
+////        }
+////    }
+
+////    public void IncreasePlayerLevel()
+////    {
+////        playerLevel++;
+////        PlayerPrefs.SetInt("PlayerLevel", playerLevel);
+////        PlayerPrefs.SetInt("MaxPlanks", maxPlanks);
+
+
+////    }
+
+////    private Plank GetRandomPlankForLevel(int level)
+////    {
+////        // Determine the range of planks based on level
+////        int maxPlankIndex = Mathf.Clamp(level / 10 * 5, 5, allPlanks.Count);
+
+////        // Get a list of planks that haven't exceeded the limit
+////        List<Plank> eligiblePlanks = new List<Plank>();
+
+////        for (int i = 0; i < maxPlankIndex; i++)
+////        {
+////            var plank = allPlanks[i];
+////            if (plankCounts.ContainsKey(plank.prefab) && plankCounts[plank.prefab] < 2)
+////            {
+////                eligiblePlanks.Add(plank);
+////            }
+////        }
+
+////        if (eligiblePlanks.Count == 0)
+////        {
+////            Debug.LogWarning("No eligible planks available for placement.");
+////            return null;
+////        }
+
+////        // Randomly select an eligible plank
+////        int randomIndex = Random.Range(0, eligiblePlanks.Count);
+////        return eligiblePlanks[randomIndex];
+////    }
+////}
+
+
+//////using System.Collections.Generic;
+//////using UnityEngine;
+
+//////public class RoadGenerator : MonoBehaviour
+//////{
+//////    [System.Serializable]
+//////    public class Plank
+//////    {
+//////        public GameObject prefab; // Plank prefab
+//////    }
+
+//////    public List<Plank> allPlanks = new List<Plank>(); // List of all planks
+//////    public Transform startPlankPosition;             // Start position for the road
+//////    public int playerLevel = 1;                      // Current player level
+//////    public int minPlanks = 5;                        // Minimum number of planks in a road
+//////    public int maxPlanks = 10;                       // Maximum number of planks in a road
+//////    public Plank startPlank;                         // First plank of the road
+//////    public Plank endPlank;                           // Last plank of the road
+
+//////    private Transform currentEndTransform;           // Tracks the end position and rotation
+//////    private Dictionary<GameObject, int> plankCounts; // Tracks the count of each plank prefab
+
+//////    void Start()
+//////    {
+//////        GenerateRoad();
+//////    }
+
+//////    public void GenerateRoad()
+//////    {
+//////        // Initialize the plank count dictionary
+//////        plankCounts = new Dictionary<GameObject, int>();
+
+//////        // Add all planks from the list
+//////        foreach (var plank in allPlanks)
+//////        {
+//////            if (!plankCounts.ContainsKey(plank.prefab))
+//////                plankCounts[plank.prefab] = 0;
+//////        }
+
+//////        // Add start and end planks if not already in the dictionary
+//////        if (startPlank != null && !plankCounts.ContainsKey(startPlank.prefab))
+//////        {
+//////            plankCounts[startPlank.prefab] = 0;
+//////        }
+
+//////        if (endPlank != null && !plankCounts.ContainsKey(endPlank.prefab))
+//////        {
+//////            plankCounts[endPlank.prefab] = 0;
+//////        }
+
+//////        // Reset position
+//////        currentEndTransform = new GameObject("CurrentEnd").transform;
+//////        currentEndTransform.position = startPlankPosition.position;
+//////        currentEndTransform.rotation = startPlankPosition.rotation;
+
+//////        // Clear existing road (if any)
+//////        foreach (Transform child in transform)
+//////        {
+//////            Destroy(child.gameObject);
+//////        }
+
+//////        // Generate road
+//////        int plankCount = Random.Range(minPlanks, maxPlanks + 1);
+
+//////        // Add the starting plank
+//////        if (startPlank != null)
+//////        {
+//////            PlacePlank(startPlank);
+//////        }
+
+//////        // Generate middle planks based on the player's level
+//////        for (int i = 0; i < plankCount; i++)
+//////        {
+//////            Plank randomPlank = GetRandomPlankForLevel(playerLevel);
+//////            if (randomPlank != null)
+//////            {
+//////                PlacePlank(randomPlank);
+//////            }
+//////        }
+
+//////        // Add the ending plank
+//////        if (endPlank != null)
+//////        {
+//////            PlacePlank(endPlank);
+//////        }
+
+//////        ActionHelper.SpawnLife?.Invoke();
+//////        // Cleanup
+//////        Destroy(currentEndTransform.gameObject);
+//////    }
+
+//////    private void PlacePlank(Plank plank)
+//////    {
+//////        // Instantiate the plank at the current end position and rotation
+//////        GameObject plankObject = Instantiate(plank.prefab, currentEndTransform.position, currentEndTransform.rotation, transform);
+
+//////        // Update the count for the placed plank
+//////        if (plankCounts.ContainsKey(plank.prefab))
+//////        {
+//////            plankCounts[plank.prefab]++;
+//////        }
+//////        else
+//////        {
+//////            Debug.LogError($"Plank prefab {plank.prefab.name} is not in the plankCounts dictionary.");
+//////            return;
+//////        }
+
+//////        // Find the "End" child transform in the instantiated plank
+//////        Transform endTransform = plankObject.transform.Find("End");
+//////        if (endTransform != null)
+//////        {
+//////            // Update current end transform to the new end position and rotation
+//////            currentEndTransform.position = endTransform.position;
+//////            currentEndTransform.rotation = endTransform.rotation;
+//////        }
+//////        else
+//////        {
+//////            Debug.LogWarning($"Plank {plank.prefab.name} is missing an 'End' child transform.");
+//////        }
+//////    }
+
+//////    private Plank GetRandomPlankForLevel(int level)
+//////    {
+//////        // Determine eligible planks based on the player's level
+//////        List<Plank> eligiblePlanks = new List<Plank>();
+
+//////        if (level < 10)
+//////        {
+//////            // Select planks 1 to 5
+//////            eligiblePlanks.AddRange(allPlanks.GetRange(0, Mathf.Min(5, allPlanks.Count)));
+//////        }
+//////        else if (level < 20)
+//////        {
+//////            // Select planks 1 to 10
+//////            eligiblePlanks.AddRange(allPlanks.GetRange(0, Mathf.Min(10, allPlanks.Count)));
+//////        }
+//////        else
+//////        {
+//////            // Select all planks
+//////            eligiblePlanks.AddRange(allPlanks);
+//////        }
+
+//////        // Remove planks that have reached their limit
+//////        eligiblePlanks.RemoveAll(plank => plankCounts.ContainsKey(plank.prefab) && plankCounts[plank.prefab] >= 2);
+
+//////        if (eligiblePlanks.Count == 0)
+//////        {
+//////            Debug.LogWarning("No eligible planks available for placement.");
+//////            return null;
+//////        }
+
+//////        // Randomly select an eligible plank
+//////        int randomIndex = Random.Range(0, eligiblePlanks.Count);
+//////        return eligiblePlanks[randomIndex];
+//////    }
+//////}
+
+
+
+
+//////using System.Collections.Generic;
+//////using UnityEngine;
+
+//////public class RoadGenerator : MonoBehaviour
+//////{
+//////    [System.Serializable]
+//////    public class Plank
+//////    {
+//////        public GameObject prefab; // Plank prefab
+//////    }
+
+//////    public List<Plank> allPlanks = new List<Plank>(); // List of all planks
+//////    public Transform startPlankPosition;             // Start position for the road
+//////    public int playerLevel = 1;                      // Current player level
+//////    public int minPlanks = 5;                        // Minimum number of planks in a road
+//////    public int maxPlanks = 10;                       // Maximum number of planks in a road
+//////    public Plank startPlank;                         // First plank of the road
+//////    public Plank endPlank;                           // Last plank of the road
+
+//////    private Transform currentEndTransform;           // Tracks the end position and rotation
+//////    private Dictionary<GameObject, int> plankCounts; // Tracks the count of each plank prefab
+
+//////    void Start()
+//////    {
+//////        GenerateRoad();
+//////    }
+
+//////    public void GenerateRoad()
+//////    {
+//////        // Initialize the plank count dictionary
+//////        plankCounts = new Dictionary<GameObject, int>();
+
+//////        // Add all planks from the list
+//////        foreach (var plank in allPlanks)
+//////        {
+//////            if (!plankCounts.ContainsKey(plank.prefab))
+//////                plankCounts[plank.prefab] = 0;
+//////        }
+
+//////        // Add start and end planks if not already in the dictionary
+//////        if (startPlank != null && !plankCounts.ContainsKey(startPlank.prefab))
+//////        {
+//////            plankCounts[startPlank.prefab] = 0;
+//////        }
+
+//////        if (endPlank != null && !plankCounts.ContainsKey(endPlank.prefab))
+//////        {
+//////            plankCounts[endPlank.prefab] = 0;
+//////        }
+
+//////        // Reset position
+//////        currentEndTransform = new GameObject("CurrentEnd").transform;
+//////        currentEndTransform.position = startPlankPosition.position;
+//////        currentEndTransform.rotation = startPlankPosition.rotation;
+
+//////        // Clear existing road (if any)
+//////        foreach (Transform child in transform)
+//////        {
+//////            Destroy(child.gameObject);
+//////        }
+
+//////        // Generate road
+//////        int plankCount = Random.Range(minPlanks, maxPlanks + 1);
+
+//////        // Add the starting plank
+//////        if (startPlank != null)
+//////        {
+//////            PlacePlank(startPlank);
+//////        }
+
+//////        // Generate middle planks based on the player's level
+//////        for (int i = 0; i < plankCount; i++)
+//////        {
+//////            Plank randomPlank = GetRandomPlankForLevel(playerLevel);
+//////            if (randomPlank != null)
+//////            {
+//////                PlacePlank(randomPlank);
+//////            }
+//////        }
+
+//////        // Add the ending plank
+//////        if (endPlank != null)
+//////        {
+//////            PlacePlank(endPlank);
+//////        }
+
+//////        ActionHelper.SpawnLife?.Invoke();
+//////        // Cleanup
+//////        Destroy(currentEndTransform.gameObject);
+//////    }
+
+//////    private void PlacePlank(Plank plank)
+//////    {
+//////        // Instantiate the plank at the current end position and rotation
+//////        GameObject plankObject = Instantiate(plank.prefab, currentEndTransform.position, currentEndTransform.rotation, transform);
+
+//////        // Update the count for the placed plank
+//////        if (plankCounts.ContainsKey(plank.prefab))
+//////        {
+//////            plankCounts[plank.prefab]++;
+//////        }
+//////        else
+//////        {
+//////            Debug.LogError($"Plank prefab {plank.prefab.name} is not in the plankCounts dictionary.");
+//////            return;
+//////        }
+
+//////        // Find the "End" child transform in the instantiated plank
+//////        Transform endTransform = plankObject.transform.Find("End");
+//////        if (endTransform != null)
+//////        {
+//////            // Update current end transform to the new end position and rotation
+//////            currentEndTransform.position = endTransform.position;
+//////            currentEndTransform.rotation = endTransform.rotation;
+//////        }
+//////        else
+//////        {
+//////            Debug.LogWarning($"Plank {plank.prefab.name} is missing an 'End' child transform.");
+//////        }
+//////    }
+
+//////    private Plank GetRandomPlankForLevel(int level)
+//////    {
+//////        // Get a list of planks that haven't exceeded the limit
+//////        List<Plank> eligiblePlanks = new List<Plank>();
+
+//////        foreach (var plank in allPlanks)
+//////        {
+//////            if (plankCounts.ContainsKey(plank.prefab) && plankCounts[plank.prefab] < 2)
+//////            {
+//////                eligiblePlanks.Add(plank);
+//////            }
+//////        }
+
+//////        if (eligiblePlanks.Count == 0)
+//////        {
+//////            Debug.LogWarning("No eligible planks available for placement.");
+//////            return null;
+//////        }
+
+//////        // Randomly select an eligible plank
+//////        int randomIndex = Random.Range(0, eligiblePlanks.Count);
+//////        return eligiblePlanks[randomIndex];
+//////    }
+//////}

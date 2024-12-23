@@ -15,7 +15,7 @@ public class CameraManager : MonoBehaviour
 
     public void SetTargetGroup()
     {
-        _target = GameObject.FindGameObjectWithTag("Player").transform;
+        _target = GameObject.FindGameObjectWithTag("Target").transform;
         _targetGroup.AddMember(_target, 1, 1);
     }
 }

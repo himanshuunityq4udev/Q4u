@@ -1,5 +1,6 @@
 using UnityEngine;
 
+using Unity.Cinemachine;
 namespace state
 {
     public class BallController : MonoBehaviour
@@ -18,13 +19,14 @@ namespace state
         [SerializeField] private GameObject cam2;
 
         bool isLevelComplete;
-
+        public GameObject freeLookCamera;
 
 
         private void Awake()
         {
             rb = GetComponent<Rigidbody>();
             playerInput = GetComponent<PlayerInput>();
+            cam1 = GameObject.FindGameObjectWithTag("FreeLookCam");
         }
 
 
@@ -71,7 +73,7 @@ namespace state
         public bool IsFallen()
         {
             // Check if the ball has fallen below a certain threshold
-            return transform.position.y < -10;
+            return transform.position.y < -30;
         }
 
         public void LoseLife()
@@ -130,6 +132,9 @@ namespace state
             transform.position = playerData.respawnPosition;
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
+            freeLookCamera.SetActive(false);
+            freeLookCamera.transform.position = new Vector3(0, -5, 0);
+            DisableRecentering();
             Debug.Log("Respawned");
         }
 
@@ -146,6 +151,12 @@ namespace state
                 ActionHelper.DontHaveEnoughCoins?.Invoke();
             }
         }
+
+        private void DisableRecentering()
+        {
+            freeLookCamera.SetActive(true);
+        }
+
         #endregion
     }
 

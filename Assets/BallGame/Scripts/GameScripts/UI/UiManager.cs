@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class UiManager : MonoBehaviour
 {
 
@@ -51,8 +52,10 @@ public class UiManager : MonoBehaviour
     [SerializeField] GameObject removeAdsButton;
 
 
+
     [SerializeField] GameObject ballCam;
     [SerializeField] GameObject skyCam;
+
 
     private void OnEnable()
     {
@@ -195,6 +198,8 @@ public class UiManager : MonoBehaviour
     private void LevelComplete()
     {
         menuController.PushPage(levelCompletePage);
+      
+
     }
     public void OnNextButtonClicked()
     {
@@ -202,6 +207,9 @@ public class UiManager : MonoBehaviour
         ActionHelper.GenerateNewLevel?.Invoke();
         menuController.PopPage();
     }
+   
+
+
 
 
     #region------ Level Failed Panel -------------

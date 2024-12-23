@@ -8,6 +8,8 @@ TagManager:
   - Life
   - LifeSpawnPoint
   - CheckPoints
+  - FreeLookCam
+  - Target
   layers:
   - Default
   - TransparentFX
