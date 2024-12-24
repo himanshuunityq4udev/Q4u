@@ -150,16 +150,16 @@ public class RoadGenerator : MonoBehaviour
     }
 
     // Helper method to shuffle a list
-    private void ShuffleList<T>(List<T> list)
-    {
-        for (int i = 0; i < list.Count; i++)
-        {
-            int randomIndex = Random.Range(i, list.Count);
-            T temp = list[i];
-            list[i] = list[randomIndex];
-            list[randomIndex] = temp;
-        }
-    }
+    //private void ShuffleList<T>(List<T> list)
+    //{
+    //    for (int i = 0; i < list.Count; i++)
+    //    {
+    //        int randomIndex = Random.Range(i, list.Count);
+    //        T temp = list[i];
+    //        list[i] = list[randomIndex];
+    //        list[randomIndex] = temp;
+    //    }
+    //}
 
     private void PlacePlank(GameObject plankPrefab)
     {

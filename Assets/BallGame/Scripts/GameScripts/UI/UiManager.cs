@@ -55,6 +55,7 @@ public class UiManager : MonoBehaviour
 
     [SerializeField] GameObject ballCam;
     [SerializeField] GameObject skyCam;
+    [SerializeField] Animator levelAnimator;
 
 
     private void OnEnable()
@@ -112,6 +113,7 @@ public class UiManager : MonoBehaviour
         menuController.PushPage(gamePage);
         removeAdsButton.SetActive(false);
         mainCoinButton.SetActive(false);
+        levelAnimator.enabled = true;
     }
 
     private void OnBallButtonClicked()
@@ -172,10 +174,14 @@ public class UiManager : MonoBehaviour
 
     private void OnBackButtonClicked()
     {
-        OnBallSelectButtonClicked();
         ActionHelper.ResetBallSelection?.Invoke();
-        OnSkySelectButtonClicked();
-
+        ActionHelper.ResetSkySelection?.Invoke();
+        menuController.PopPage();
+        backButton.SetActive(false);
+        skyCam.SetActive(false);
+        menuController.PopPage();
+        backButton.SetActive(false);
+        ballCam.SetActive(false);
     }
 
     #region --------Sky Selection Panel ----------
@@ -187,6 +193,8 @@ public class UiManager : MonoBehaviour
         skyCam.SetActive(false);
         ActionHelper.SelectSky?.Invoke();
     }
+  
+
     private void OnSkyUnlockButtonClicked()
     {
         ActionHelper.UnlockSky?.Invoke();

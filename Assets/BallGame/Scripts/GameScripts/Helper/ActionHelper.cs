@@ -58,4 +58,8 @@ public class ActionHelper : MonoBehaviour
 
     //UImanager script  -> BallController script
     public static Action GenerateNewLevel;
+
+
+    //collisionHandler script -> audioManager;
+    public static Action PlayHaptic;
 }

@@ -16,21 +16,15 @@ namespace state
 
         PlayerInput playerInput;
         [SerializeField] private GameObject cam1;
-        [SerializeField] private GameObject cam2;
 
         bool isLevelComplete;
-        public GameObject freeLookCamera;
 
 
         private void Awake()
         {
             rb = GetComponent<Rigidbody>();
             playerInput = GetComponent<PlayerInput>();
-            cam1 = GameObject.FindGameObjectWithTag("FreeLookCam");
         }
-
-
-
 
         private void Start()
         {
@@ -50,9 +44,6 @@ namespace state
             ActionHelper.GenerateNewLevel -= GenerateNextLevel;
 
         }
-
- 
-
 
         private void Update()
         {
@@ -102,9 +93,7 @@ namespace state
             ActionHelper.GoHome?.Invoke();
             StateMachine.ChangeState(new RespawnState(this));
             playerInput.enabled = true;
-            cam1.SetActive(true);
-            cam2.SetActive(false);
-           
+            cam1.GetComponent<Animator>().enabled = false;
         }
 
 
@@ -117,11 +106,9 @@ namespace state
                 rb.angularVelocity = Vector3.zero;
                 rb.linearVelocity = Vector3.zero;
                 playerInput.enabled = false;
-                cam1.SetActive(false);
-                cam2.SetActive(true);
+                cam1.GetComponent<Animator>().enabled = true;
                 isLevelComplete = true;
             }
-           
         }
 
 
@@ -132,9 +119,6 @@ namespace state
             transform.position = playerData.respawnPosition;
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
-            freeLookCamera.SetActive(false);
-            freeLookCamera.transform.position = new Vector3(0, -5, 0);
-            DisableRecentering();
             Debug.Log("Respawned");
         }
 
@@ -152,10 +136,7 @@ namespace state
             }
         }
 
-        private void DisableRecentering()
-        {
-            freeLookCamera.SetActive(true);
-        }
+     
 
         #endregion
     }

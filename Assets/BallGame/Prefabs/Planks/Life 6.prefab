@@ -1,36 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1896759350511968685
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1410799066897479383}
-  m_Layer: 0
-  m_Name: LifeSpawnPoint
-  m_TagString: LifeSpawnPoint
-  m_Icon: {fileID: 3936346786652291628, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1410799066897479383
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1896759350511968685}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 7.5}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4623151034356511274}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3124001130240079749
 GameObject:
   m_ObjectHideFlags: 0
@@ -311,7 +280,7 @@ Transform:
   m_Children:
   - {fileID: 7536592715977779711}
   - {fileID: 4817449923425465755}
-  - {fileID: 1410799066897479383}
+  - {fileID: 502436904982850757}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8859044961581476464
@@ -426,3 +395,65 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 9ea5e80f0e794434891f0be48f37d1b1, type: 2}
+--- !u!1001 &415184185513349638
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 4623151034356511274}
+    m_Modifications:
+    - target: {fileID: 232503153448107715, guid: 785e55c45c1d64871b8d32540d08c027, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 232503153448107715, guid: 785e55c45c1d64871b8d32540d08c027, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.51
+      objectReference: {fileID: 0}
+    - target: {fileID: 232503153448107715, guid: 785e55c45c1d64871b8d32540d08c027, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 7.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 232503153448107715, guid: 785e55c45c1d64871b8d32540d08c027, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 232503153448107715, guid: 785e55c45c1d64871b8d32540d08c027, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 232503153448107715, guid: 785e55c45c1d64871b8d32540d08c027, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 232503153448107715, guid: 785e55c45c1d64871b8d32540d08c027, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 232503153448107715, guid: 785e55c45c1d64871b8d32540d08c027, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 232503153448107715, guid: 785e55c45c1d64871b8d32540d08c027, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 232503153448107715, guid: 785e55c45c1d64871b8d32540d08c027, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9118277840173297306, guid: 785e55c45c1d64871b8d32540d08c027, type: 3}
+      propertyPath: m_Name
+      value: LifeSpawnPoint
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 785e55c45c1d64871b8d32540d08c027, type: 3}
+--- !u!4 &502436904982850757 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 232503153448107715, guid: 785e55c45c1d64871b8d32540d08c027, type: 3}
+  m_PrefabInstance: {fileID: 415184185513349638}
+  m_PrefabAsset: {fileID: 0}

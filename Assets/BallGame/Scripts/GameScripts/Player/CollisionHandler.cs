@@ -1,5 +1,5 @@
 using UnityEngine;
-using CandyCoded.HapticFeedback;
+
 public class CollisionHandler : MonoBehaviour
 {
 
@@ -7,7 +7,7 @@ public class CollisionHandler : MonoBehaviour
     {
         if (!collision.gameObject.CompareTag("Ground"))
         {
-            HapticFeedback.MediumFeedback();
+            ActionHelper.PlayHaptic?.Invoke();
         }
     }
 }

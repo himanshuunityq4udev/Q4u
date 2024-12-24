@@ -21,9 +21,9 @@ public class SkyboxChanger : MonoBehaviour
 
     private void Awake()
     {
-        if (!PlayerPrefs.HasKey("SkyboxPrefKey"))
+        if (!PlayerPrefs.HasKey(SkyboxPrefKey))
         {
-            PlayerPrefs.SetInt("SkyboxPrefKey", 0);
+            PlayerPrefs.SetInt(SkyboxPrefKey, 0);
         }
     }
 
@@ -31,29 +31,28 @@ public class SkyboxChanger : MonoBehaviour
     {
         ActionHelper.SelectSky += ApplySkybox;
         ActionHelper.UnlockSky += UnlockSkybox;
+        ActionHelper.ResetSkySelection += ResetSelectedSkyBox;
     }
 
     private void OnDisable()
     {
         ActionHelper.SelectSky -= ApplySkybox;
         ActionHelper.UnlockSky -= UnlockSkybox;
+        ActionHelper.ResetSkySelection -= ResetSelectedSkyBox;
+
 
 
     }
 
     private void Start()
     {
-        // Load the saved skybox index and apply it
-        int skyboxIndex = PlayerPrefs.GetInt(SkyboxPrefKey, 0); // Default to the first skybox
-        CurrentMaterial = skyboxIndex;
-        ApplySkybox();
+        ResetSelectedSkyBox();
     }
 
     // Update is called once per frame
     public void ChangeSkyBoxMaterial(bool next)
     {
-        // Save the current skybox before changing it
-        previousSkybox = RenderSettings.skybox;
+       
 
         if (next)
         {
@@ -61,12 +60,10 @@ public class SkyboxChanger : MonoBehaviour
             if (CurrentMaterial < skyboxData.skyBoxMaterials.Count - 1)
             {
                 CurrentMaterial++;
-              //  Debug.Log("Next: " + CurrentMaterial);
             }
             else
             {
                 CurrentMaterial = 0;
-              //  Debug.Log("Next: Reset to 0");
             }
         }
         else
@@ -75,12 +72,10 @@ public class SkyboxChanger : MonoBehaviour
             if (CurrentMaterial > 0)
             {
                 CurrentMaterial--;
-               // Debug.Log("Previous: " + CurrentMaterial);
             }
             else
             {
                 CurrentMaterial = skyboxData.skyBoxMaterials.Count - 1;
-              //  Debug.Log("Previous: Reset to " + CurrentMaterial);
             }
         }
 
@@ -95,31 +90,21 @@ public class SkyboxChanger : MonoBehaviour
         if (CurrentMaterial >= 0 && CurrentMaterial < skyboxData.skyBoxMaterials.Count)
         {
             RenderSettings.skybox = skyboxData.skyBoxMaterials[CurrentMaterial];
-           // Debug.Log("Previous Skybox: " + (previousSkybox != null ? previousSkybox.name : "None"));
+         
             DynamicGI.UpdateEnvironment(); // Ensure lighting is updated
-           // Debug.Log("Current Skybox: " + RenderSettings.skybox.name);
-
             // Save the selected skybox index for persistence
             PlayerPrefs.SetInt(SkyboxPrefKey, CurrentMaterial);
             PlayerPrefs.Save();
         }
     }
 
-    // Function to manually change the skybox based on index
-    public void ChangeSkybox(int index)
-    {
-        if (index >= 0 && index < skyboxData.skyBoxMaterials.Count)
-        {
-            // Set the new current material index
-            CurrentMaterial = index;
-            ApplySkybox();
-        }
-    }
-
     public void ResetSelectedSkyBox()
     {
+        // Get the selected skybox index for persistence
+        CurrentMaterial = PlayerPrefs.GetInt(SkyboxPrefKey);
         // Apply the selected skybox material(runtime)
-        RenderSettings.skybox = previousSkybox;
+        RenderSettings.skybox = skyboxData.skyBoxMaterials[CurrentMaterial];
+        DynamicGI.UpdateEnvironment(); // Ensure lighting is updated
 
     }
 
