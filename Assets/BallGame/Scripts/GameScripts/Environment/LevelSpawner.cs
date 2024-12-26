@@ -12,9 +12,11 @@ public class LevelSpawner : MonoBehaviour
         if (!isTestLevel)
         {
             SpawnLevel();
+            dropdown.gameObject.SetActive(false);
         }
         else
         {
+            dropdown.gameObject.SetActive(true);
             TestLevelSpawn();
         }
     }

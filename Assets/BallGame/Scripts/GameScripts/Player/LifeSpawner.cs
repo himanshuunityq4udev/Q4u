@@ -2,7 +2,10 @@ using UnityEngine;
 
 public class LifeSpawner : MonoBehaviour
 {
+
     public GameObject lifePrefab;
+
+
     private void Start()
     {
             SpawnCoins();
@@ -17,4 +20,5 @@ public class LifeSpawner : MonoBehaviour
         }
         Instantiate(lifePrefab,transform);
     }
+   
 }

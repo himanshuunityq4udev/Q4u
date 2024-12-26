@@ -11,7 +11,6 @@ public class Life : MonoBehaviour
     {
         if (playerData.life < playerData.totalLife && !isCollected)
         {
-            gameObject.GetComponent<SphereCollider>().enabled = true;
             for (int j = 0; j < transform.childCount; j++)
             {
                 if (j == PlayerPrefs.GetInt("CurrentBall"))
@@ -32,7 +31,7 @@ public class Life : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player")&& !isCollected)
+        if (other.CompareTag("Player")&& !isCollected && playerData.life < playerData.totalLife)
         {
                 isCollected = true;
                 ActionHelper.addLife.Invoke();
@@ -40,11 +39,15 @@ public class Life : MonoBehaviour
                 DisableAllChild(false);
 
         }
+        else
+        {
+            isCollected = true;
+            playerData.respawnPosition = transform.position;
+        }
     }
 
     private void DisableAllChild(bool value)
     {
-        gameObject.GetComponent<SphereCollider>().enabled = false;
         for (int j = 0; j < transform.childCount; j++)
         {
             transform.GetChild(j).gameObject.SetActive(value);

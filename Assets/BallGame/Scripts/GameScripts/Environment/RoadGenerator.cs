@@ -78,88 +78,60 @@ public class RoadGenerator : MonoBehaviour
         currentEndTransform.rotation = startPlankPosition.rotation;
     }
 
+
     private void GenerateMiddlePlanks()
     {
         int totalPlanks = Random.Range(minPlanks, maxPlanks + 1);
-        int coinPlankCount = Random.Range(3, 6); // 3-5 coin planks
-        int lifePlankCount = 2;                 // 2 life planks
-        int plainPlankCount = totalPlanks - coinPlankCount - lifePlankCount;
+        int lifePlankCount = 2; // Keep life planks as 2
+        int remainingPlanks = totalPlanks - lifePlankCount;
 
-        // Place coin planks
-        for (int i = 0; i < coinPlankCount; i++)
-        {
-            GameObject plank = GetRandomPlank(coinPlanks);
-            if (plank) PlacePlank(plank);
-        }
+        // Ensure equal number of coin and plain planks
+        int coinPlankCount = remainingPlanks / 2;
+        int plainPlankCount = remainingPlanks - coinPlankCount;
 
-        // Place life planks
+        List<GameObject> selectedPlanks = new List<GameObject>();
+
+        // Add life planks
         for (int i = 0; i < lifePlankCount; i++)
         {
-            GameObject plank = GetRandomPlank(lifePlanks);
-            if (plank) PlacePlank(plank);
+            selectedPlanks.Add(GetRandomPlank(lifePlanks));
         }
 
-        // Place plain planks
+        // Add coin planks
+        for (int i = 0; i < coinPlankCount; i++)
+        {
+            selectedPlanks.Add(GetRandomPlank(coinPlanks));
+        }
+
+        // Add plain planks
         for (int i = 0; i < plainPlankCount; i++)
         {
-            GameObject plank = GetRandomPlank(plainPlanks);
-            if (plank) PlacePlank(plank);
+            selectedPlanks.Add(GetRandomPlank(plainPlanks));
         }
 
-        //int totalPlanks = Random.Range(minPlanks, maxPlanks + 1);
-        //int coinPlankCount = Random.Range(3, 6); // 3-5 coin planks
-        //int lifePlankCount = 2;                 // 2 life planks
-        //int plainPlankCount = totalPlanks - coinPlankCount - lifePlankCount;
+        // Shuffle the selected planks
+        ShuffleList(selectedPlanks);
 
-        //// Create a list of indices for plank placement
-        //List<int> plankIndices = new List<int>();
-        //for (int i = 0; i < totalPlanks; i++)
-        //{
-        //    plankIndices.Add(i);
-        //}
-
-        //// Shuffle the indices
-        //ShuffleList(plankIndices);
-
-        //// Reserve positions for life planks
-        //List<int> lifePlankPositions = plankIndices.GetRange(0, lifePlankCount);
-
-        //// Reserve positions for coin planks
-        //List<int> coinPlankPositions = plankIndices.GetRange(lifePlankCount, coinPlankCount);
-
-        //// Generate planks
-        //for (int i = 0; i < totalPlanks; i++)
-        //{
-        //    GameObject plank = null;
-
-        //    if (lifePlankPositions.Contains(i))
-        //    {
-        //        plank = GetRandomPlank(lifePlanks); // Place a life plank
-        //    }
-        //    else if (coinPlankPositions.Contains(i))
-        //    {
-        //        plank = GetRandomPlank(coinPlanks); // Place a coin plank
-        //    }
-        //    else
-        //    {
-        //        plank = GetRandomPlank(plainPlanks); // Place a plain plank
-        //    }
-
-        //    if (plank != null) PlacePlank(plank);
-        //}
+        // Place the planks
+        foreach (var plank in selectedPlanks)
+        {
+            if (plank != null)
+            {
+                PlacePlank(plank);
+            }
+        }
     }
-
-    // Helper method to shuffle a list
-    //private void ShuffleList<T>(List<T> list)
-    //{
-    //    for (int i = 0; i < list.Count; i++)
-    //    {
-    //        int randomIndex = Random.Range(i, list.Count);
-    //        T temp = list[i];
-    //        list[i] = list[randomIndex];
-    //        list[randomIndex] = temp;
-    //    }
-    //}
+   
+    private void ShuffleList<T>(List<T> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            int randomIndex = Random.Range(i, list.Count);
+            T temp = list[i];
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
+        }
+    }
 
     private void PlacePlank(GameObject plankPrefab)
     {

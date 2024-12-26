@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 7983265811595439629}
   - component: {fileID: 5613660983313363997}
   - component: {fileID: 5294706191192359760}
-  - component: {fileID: 1011774017093336917}
   m_Layer: 0
   m_Name: CheckPoints
   m_TagString: CheckPoints
@@ -87,28 +86,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &1011774017093336917
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 721228029339761415}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &2521015397344913445
 GameObject:
   m_ObjectHideFlags: 0
@@ -19781,6 +19758,7 @@ GameObject:
   m_Component:
   - component: {fileID: 232503153448107715}
   - component: {fileID: 1896620021730934890}
+  - component: {fileID: 8557461443011371409}
   m_Layer: 0
   m_Name: LifeSpawnPoint
   m_TagString: LifeSpawnPoint
@@ -19817,3 +19795,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifePrefab: {fileID: 2021441510642630196, guid: 5f7a99861efbf46bab6c53d40fe4f50a, type: 3}
+--- !u!65 &8557461443011371409
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9118277840173297306}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2, y: 0.001, z: 2}
+  m_Center: {x: 0, y: 0, z: 0}
