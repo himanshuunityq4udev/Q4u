@@ -3,9 +3,16 @@ using UnityEngine;
 public class Life : MonoBehaviour
 {
    [SerializeField] PlayerData playerData;
+   [SerializeField] Animator checkPointAnimator;
 
     public bool isCollected;
     public bool IsCollected => isCollected;
+
+    private void Start()
+    {
+        checkPointAnimator = GetComponentInParent<Animator>();
+    }
+
 
     private void Update()
     {
@@ -43,6 +50,7 @@ public class Life : MonoBehaviour
         {
             isCollected = true;
             playerData.respawnPosition = transform.position;
+            checkPointAnimator.enabled = true;
         }
     }
 
@@ -51,6 +59,7 @@ public class Life : MonoBehaviour
         for (int j = 0; j < transform.childCount; j++)
         {
             transform.GetChild(j).gameObject.SetActive(value);
+
         }
     }
 }

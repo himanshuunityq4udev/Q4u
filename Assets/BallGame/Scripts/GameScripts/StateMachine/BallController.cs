@@ -5,10 +5,10 @@ namespace state
 {
     public class BallController : MonoBehaviour
     {
-        public float moveSpeed = 10f; // Speed multiplier
+      //  public float moveSpeed = 10f; // Speed multiplier
         public StateMachine StateMachine { get; private set; }
 
-        [SerializeField] int revivalAmount = 200;
+      //  [SerializeField] int revivalAmount = 200;
 
         private Rigidbody rb;
 
@@ -124,9 +124,9 @@ namespace state
 
         public void ReviveLife()
         {
-            if (MoneyManager.Instance.playerInfo.money > revivalAmount)
+            if (MoneyManager.Instance.playerInfo.money > playerData.revivalAmount)
             {
-                MoneyManager.Instance.SpendMoney(revivalAmount);
+                MoneyManager.Instance.SpendMoney(playerData.revivalAmount);
                 playerData.life = playerData.totalLife;
                 ActionHelper.updateLifeUI?.Invoke();
             }

@@ -11,4 +11,5 @@ public class PlayerData : ScriptableObject
     public int life = 4;
     public int totalLife = 4;
     public Vector3 respawnPosition = new Vector3(0, 1, 0);
+    public int revivalAmount = 200;
 }

@@ -34,8 +34,8 @@ public class Ball : MonoBehaviour
     // Function to move the ball
     private void MoveBall(Vector2 _inputDelta, float _speed, float _swipeDistanceThreshold)
     {
-        if (IsGrounded())
-        {
+        //if (IsGrounded())
+        //{
 
             Vector3 moveDirection = new Vector3(-_inputDelta.x, 0, -_inputDelta.y).normalized;
 
@@ -49,7 +49,7 @@ public class Ball : MonoBehaviour
 
             // Move the ball using Rigidbody physics
             ballRigidbody.AddForce(moveVector * _speed * _swipeDistanceThreshold, ForceMode.Force);
-        }
+        //}
     }
 
 

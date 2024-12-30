@@ -9,6 +9,8 @@ public class CoinSpawner : MonoBehaviour
     /// </summary>
     /// <param name="plankObject">The plank object where coins should be spawned.</param>
     ///
+
+    int count = 0;
     private void Start()
     {
         SpawnCoins();
@@ -21,7 +23,10 @@ public class CoinSpawner : MonoBehaviour
             Debug.LogWarning("Coin prefab is not assigned!");
             return;
         }
-        Instantiate(coinPrefab, transform);
-      
+        if (count == 0)
+        {
+            Instantiate(coinPrefab, transform);
+            count++;
+        }
     }
 }

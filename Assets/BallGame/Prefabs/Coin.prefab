@@ -96,7 +96,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6218550275322603482}
   - component: {fileID: 3388803202637848660}
-  - component: {fileID: 5855917621322315721}
   - component: {fileID: 6942994672456190273}
   m_Layer: 0
   m_Name: Coin
@@ -135,28 +134,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   particles: {fileID: 1000013202101736, guid: febcc465c0b6f46bba7bb43a7e341fe7, type: 3}
   coinAmount: 7
---- !u!95 &5855917621322315721
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2161854331122709000}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: cfad7046c075744edb43d4bddea22375, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  moveSpeed: 100
 --- !u!135 &6942994672456190273
 SphereCollider:
   m_ObjectHideFlags: 0

@@ -4,21 +4,24 @@ public class LifeSpawner : MonoBehaviour
 {
 
     public GameObject lifePrefab;
-
+    int count = 0;
 
     private void Start()
     {
-            SpawnCoins();
+        SpawnLife();
     }
 
-    public void SpawnCoins()
+    public void SpawnLife()
     {
         if (lifePrefab == null)
         {
-            Debug.LogWarning("Coin prefab is not assigned!");
+            Debug.LogWarning("Life prefab is not assigned!");
             return;
         }
-        Instantiate(lifePrefab,transform);
+        if (count == 0)
+        {
+            count++;
+            Instantiate(lifePrefab, transform);
+        }
     }
-   
 }
