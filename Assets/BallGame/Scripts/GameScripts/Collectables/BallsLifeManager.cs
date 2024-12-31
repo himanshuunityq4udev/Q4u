@@ -8,7 +8,7 @@ public class BallsLifeManager : MonoBehaviour
 {
     //References
     [Header("UI references")]
-    [SerializeField] GameObject animatedBallPrefab;
+    [SerializeField] GameObject ballPrefab;
     [SerializeField] Transform spawnPos;
 
     [Space]
@@ -26,13 +26,15 @@ public class BallsLifeManager : MonoBehaviour
     [SerializeField] float spread;
 
     public Image[] balls;
-    public Sprite fullBall;
+    public Sprite[] fullBall;
     public Sprite emptyBall;
     //public Transform StartPos;
     [SerializeField] private PlayerData playerData;
 
-    Vector3 targetPosition;
+    int currentDrone = 0;
 
+    Vector3 targetPosition;
+    GameObject _ball;
 
     void Awake()
     {
@@ -55,7 +57,12 @@ public class BallsLifeManager : MonoBehaviour
     private void OnDisable()
     {
        ActionHelper.addLife -= AddLife;
-        ActionHelper.updateLifeUI -= UpdateBallImage;
+       ActionHelper.updateLifeUI -= UpdateBallImage;
+    }
+
+    private void Update()
+    {
+       
     }
 
     /// <summary>
@@ -65,9 +72,10 @@ public class BallsLifeManager : MonoBehaviour
     {
         for (int i = 0; i < maxBalls; i++)
         {
-            GameObject ball = Instantiate(animatedBallPrefab, transform);
-            ball.SetActive(false);
-            ballsQueue.Enqueue(ball);
+            _ball = Instantiate(ballPrefab, transform);
+            _ball.SetActive(false);
+
+            ballsQueue.Enqueue(_ball);
         }
     }
     /// <summary>
@@ -90,6 +98,18 @@ public class BallsLifeManager : MonoBehaviour
             {
                 //extract a coin from the pool
                 GameObject ball = ballsQueue.Dequeue();
+                currentDrone = PlayerPrefs.GetInt("CurrentBall");
+                for (int j = 0; j < ball.transform.childCount; j++)
+                {
+                    if (j == currentDrone)
+                    {
+                        ball.transform.GetChild(j).gameObject.SetActive(true);
+                    }
+                    else
+                    {
+                        ball.transform.GetChild(j).gameObject.SetActive(false);
+                    }
+                }
                 ball.SetActive(true);
 
                 //move coin to the collected coin pos
@@ -147,7 +167,8 @@ public class BallsLifeManager : MonoBehaviour
         {
             if (i < playerData.life)
             {
-                balls[i].sprite = fullBall;
+                currentDrone = PlayerPrefs.GetInt("CurrentBall");
+                balls[i].sprite = fullBall[currentDrone];
                 balls[i].enabled = true;
             }
             else if (i < playerData.totalLife)

@@ -7,4 +7,5 @@ public class BallData : ScriptableObject
     public List<GameObject> balls = new List<GameObject>();
     public List<bool> unlockedBalls = new List<bool>();
     public List<int> ballPrice = new List<int>();
+    public GameObject unlockedParticle;
 }

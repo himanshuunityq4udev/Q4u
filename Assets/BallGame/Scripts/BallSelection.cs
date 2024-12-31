@@ -107,7 +107,9 @@ public class BallSelection : MonoBehaviour
             {
                 PlayerPrefs.SetInt("CurrentBall", currentDrone);
             }
+            
         }
+        ActionHelper.updateLifeUI?.Invoke();
     }
 
     public void UnlockBall()
@@ -118,6 +120,9 @@ public class BallSelection : MonoBehaviour
             ballData.unlockedBalls[currentDrone] = true;
             _selectedBall = currentDrone; // Update the selected ball on unlock.
             UpdateUI();
+            GameObject particle = Instantiate(ballData.unlockedParticle,transform);
+            Destroy(particle, 2);
+            ActionHelper.updateLifeUI?.Invoke();
         }
         else
         {

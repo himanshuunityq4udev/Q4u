@@ -51,6 +51,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerData: {fileID: 11400000, guid: c6bc6b5437b874506adb007557cc54b2, type: 2}
+  checkPointAnimator: {fileID: 0}
   isCollected: 0
 --- !u!135 &2947382076012973194
 SphereCollider:
@@ -90,7 +91,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8424661101305476884
 Transform:
   m_ObjectHideFlags: 0

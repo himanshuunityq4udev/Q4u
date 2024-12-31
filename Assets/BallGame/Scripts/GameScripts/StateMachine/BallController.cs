@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 using Unity.Cinemachine;
 namespace state
@@ -119,7 +120,10 @@ namespace state
             transform.position = playerData.respawnPosition;
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
+            transform.rotation = Quaternion.identity;
+            ResetCameraManually();
             Debug.Log("Respawned");
+          
         }
 
         public void ReviveLife()
@@ -136,7 +140,20 @@ namespace state
             }
         }
 
-     
+        private void  ResetCameraManually()
+        {
+
+            cam1.GetComponent<CinemachineRotationComposer>().enabled = false;
+            cam1.GetComponent<CinemachineOrbitalFollow>().enabled = false;
+
+            cam1.transform.position = new Vector3(0, cam1.transform.position.y, transform.position.z - 3.5f);
+            cam1.transform.rotation = Quaternion.Euler(cam1.transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, transform.rotation.eulerAngles.z);
+
+            cam1.GetComponent<CinemachineRotationComposer>().enabled = true;
+            cam1.GetComponent<CinemachineOrbitalFollow>().enabled = true;
+
+
+        }
 
         #endregion
     }

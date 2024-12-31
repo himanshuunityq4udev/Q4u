@@ -124,17 +124,35 @@ public class RoadGenerator : MonoBehaviour
         {
             int planksInThisSection = baseInterval + (i < extraPlanks ? 1 : 0);
 
+            // Add planks for this section with alternating logic
+            bool addCoinNext = true; // Start with coin planks
             // Add planks for this section
             for (int j = 0; j < planksInThisSection; j++)
             {
-                if (coinPlanksList.Count > 0)
+                if (addCoinNext && coinPlanksList.Count > 0)
+                {
                     orderedPlanks.Add(coinPlanksList[0]);
-                else if (plainPlanksList.Count > 0)
+                    coinPlanksList.RemoveAt(0);
+                }
+                else if (!addCoinNext && plainPlanksList.Count > 0)
+                {
                     orderedPlanks.Add(plainPlanksList[0]);
+                    plainPlanksList.RemoveAt(0);
+                }
+                else if (coinPlanksList.Count > 0)
+                {
+                    // If one type is empty, fall back to the other
+                    orderedPlanks.Add(coinPlanksList[0]);
+                    coinPlanksList.RemoveAt(0);
+                }
+                else if (plainPlanksList.Count > 0)
+                {
+                    orderedPlanks.Add(plainPlanksList[0]);
+                    plainPlanksList.RemoveAt(0);
+                }
 
-                // Remove the plank after adding
-                if (coinPlanksList.Count > 0) coinPlanksList.RemoveAt(0);
-                else if (plainPlanksList.Count > 0) plainPlanksList.RemoveAt(0);
+                // Alternate for the next plank
+                addCoinNext = !addCoinNext;
             }
 
             // Add a life plank if not the last section

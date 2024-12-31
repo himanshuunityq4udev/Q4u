@@ -48,7 +48,7 @@ GameObject:
   - component: {fileID: 4736733672174303786}
   - component: {fileID: 5417562295620757477}
   - component: {fileID: 8108988974772341587}
-  - component: {fileID: 5989969820185643294}
+  - component: {fileID: 1659043134753975482}
   m_Layer: 0
   m_Name: P1A (1)
   m_TagString: Untagged
@@ -124,7 +124,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &5989969820185643294
+--- !u!64 &1659043134753975482
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -145,7 +145,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 4093872611538387204, guid: 1ad342099a43344099d64dee236333b2, type: 3}
+  m_Mesh: {fileID: 4300000, guid: 9413e8d7131724837a93fb43d854093d, type: 2}
 --- !u!1 &7057660648522046787
 GameObject:
   m_ObjectHideFlags: 0
@@ -157,7 +157,7 @@ GameObject:
   - component: {fileID: 4340798290706161694}
   - component: {fileID: 1220661781048388852}
   - component: {fileID: 8812974319405948724}
-  - component: {fileID: 6916021372564593804}
+  - component: {fileID: 6204975141255667003}
   m_Layer: 0
   m_Name: P1A
   m_TagString: Untagged
@@ -233,7 +233,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &6916021372564593804
+--- !u!64 &6204975141255667003
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -254,7 +254,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 4093872611538387204, guid: 1ad342099a43344099d64dee236333b2, type: 3}
+  m_Mesh: {fileID: 4300000, guid: 9413e8d7131724837a93fb43d854093d, type: 2}
 --- !u!1 &7712233707954790408
 GameObject:
   m_ObjectHideFlags: 0
@@ -297,7 +297,7 @@ GameObject:
   - component: {fileID: 6591086833841672546}
   - component: {fileID: 5934874170456020477}
   - component: {fileID: 484924981083157767}
-  - component: {fileID: 6338184539761761877}
+  - component: {fileID: 5813484175269824973}
   m_Layer: 0
   m_Name: 10A
   m_TagString: Ground
@@ -376,7 +376,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &6338184539761761877
+--- !u!64 &5813484175269824973
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -55,6 +55,7 @@ public class AudioManager : MonoBehaviour
             SetPlayHaptic(true); // Default value is true
 
         }
+
     }
 
     private void Start()
@@ -72,6 +73,7 @@ public class AudioManager : MonoBehaviour
     private void OnEnable()
     {
         ActionHelper.PlayHaptic += PlayHaptic;
+     
     }
     private void OnDisable()
     {
@@ -100,6 +102,7 @@ public class AudioManager : MonoBehaviour
     {
         tempMusicState = false; // Update temporary state
         UpdateButtonStates();
+  
     }
 
     public void EnableSFX()
@@ -121,6 +124,7 @@ public class AudioManager : MonoBehaviour
         SetPlayHaptic(tempHapticState);
         SetPlayMusic(tempMusicState);
         SetPlaySFX(tempSFXState);
+
     }
 
     public void CloseSettings()
@@ -130,6 +134,7 @@ public class AudioManager : MonoBehaviour
         tempMusicState = GetPlayMusic();
         tempSFXState = GetPlaySFX();
         UpdateButtonStates();
+
     }
 
 
@@ -145,7 +150,7 @@ public class AudioManager : MonoBehaviour
 
         if (sfxButtonOn != null) sfxButtonOn.gameObject.SetActive(!tempSFXState);
         if (sfxButtonOff != null) sfxButtonOff.gameObject.SetActive(tempSFXState);
-
+        PlayMusic();
     }
 
 
@@ -196,11 +201,16 @@ public class AudioManager : MonoBehaviour
 
     private void PlayMusic()
     {
-        if (GetPlayMusic())
+        if (tempMusicState)
         {
             _musicSource.clip = background;
             _musicSource.Play();
         }
+        else
+        {
+            _musicSource.Stop();
+        }
+
     }
 
 

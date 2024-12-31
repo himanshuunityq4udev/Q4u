@@ -20,11 +20,7 @@ public class Life : MonoBehaviour
         {
             for (int j = 0; j < transform.childCount; j++)
             {
-                if (j == PlayerPrefs.GetInt("CurrentBall"))
-                {
-
-                    transform.GetChild(j).gameObject.SetActive(true);
-                }
+                transform.GetChild(j).gameObject.SetActive(j == PlayerPrefs.GetInt("CurrentBall"));
             }
 
         }
@@ -43,13 +39,15 @@ public class Life : MonoBehaviour
                 isCollected = true;
                 ActionHelper.addLife.Invoke();
                 playerData.respawnPosition = transform.position;
+                //playerData.direction = transform.forward;
                 DisableAllChild(false);
 
         }
-        else
+        else if(other.CompareTag("Player") && !isCollected)
         {
             isCollected = true;
             playerData.respawnPosition = transform.position;
+             //playerData.direction = transform.forward;
             checkPointAnimator.enabled = true;
         }
     }

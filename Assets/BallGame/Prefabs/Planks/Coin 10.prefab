@@ -51,7 +51,7 @@ GameObject:
   - component: {fileID: 5815588507218541595}
   - component: {fileID: 4434649955319346784}
   - component: {fileID: 160121507002549201}
-  - component: {fileID: 7850440836825093201}
+  - component: {fileID: 6530700941261931941}
   m_Layer: 0
   m_Name: P1A
   m_TagString: Untagged
@@ -127,7 +127,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &7850440836825093201
+--- !u!64 &6530700941261931941
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -148,7 +148,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 4093872611538387204, guid: 1ad342099a43344099d64dee236333b2, type: 3}
+  m_Mesh: {fileID: 4300000, guid: 9413e8d7131724837a93fb43d854093d, type: 2}
 --- !u!1 &3371433478741508934
 GameObject:
   m_ObjectHideFlags: 0
@@ -303,7 +303,7 @@ GameObject:
   - component: {fileID: 9138655763553454568}
   - component: {fileID: 3498330791334384461}
   - component: {fileID: 4237344937882955069}
-  - component: {fileID: 1261635575839491545}
+  - component: {fileID: 2745895746040460521}
   m_Layer: 0
   m_Name: P1A (1)
   m_TagString: Untagged
@@ -379,7 +379,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &1261635575839491545
+--- !u!64 &2745895746040460521
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -400,7 +400,7 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 4093872611538387204, guid: 1ad342099a43344099d64dee236333b2, type: 3}
+  m_Mesh: {fileID: 4300000, guid: 9413e8d7131724837a93fb43d854093d, type: 2}
 --- !u!1 &5596467064632990532
 GameObject:
   m_ObjectHideFlags: 0
@@ -412,7 +412,7 @@ GameObject:
   - component: {fileID: 8744246405335477506}
   - component: {fileID: 5339846338081052303}
   - component: {fileID: 6916686507575680699}
-  - component: {fileID: 2252347888448210609}
+  - component: {fileID: 7697269876648179347}
   m_Layer: 0
   m_Name: P1A (1)
   m_TagString: Untagged
@@ -488,7 +488,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &2252347888448210609
+--- !u!64 &7697269876648179347
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -633,7 +633,7 @@ GameObject:
   - component: {fileID: 8308910139048999496}
   - component: {fileID: 1710264423323775391}
   - component: {fileID: 728271368434239362}
-  - component: {fileID: 68735398671991987}
+  - component: {fileID: 2780868928547454646}
   m_Layer: 0
   m_Name: P1A
   m_TagString: Untagged
@@ -709,7 +709,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &68735398671991987
+--- !u!64 &2780868928547454646
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
