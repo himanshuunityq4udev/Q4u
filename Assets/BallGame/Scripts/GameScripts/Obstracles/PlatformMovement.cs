@@ -50,6 +50,8 @@ public class PlatformMovement : MonoBehaviour
     void Start()
     {
         startingPosition = transform.localPosition;
+
+
         StartMovement();
     }
 

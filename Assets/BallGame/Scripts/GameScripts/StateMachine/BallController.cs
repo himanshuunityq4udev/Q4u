@@ -68,6 +68,12 @@ namespace state
             return transform.position.y < -30;
         }
 
+        public bool IsGrounded()
+        {
+            // Check if the ball is on the ground using a raycast
+            return Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 100f);
+        }
+
         public void LoseLife()
         {
             playerData.life--;

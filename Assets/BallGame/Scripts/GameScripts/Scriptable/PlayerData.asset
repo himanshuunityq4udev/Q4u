@@ -15,6 +15,7 @@ MonoBehaviour:
   swipeDistanceThreshold: 10
   swipeTimeThreshold: 0.1
   m_MaxAngularVelocity: 45
-  life: 3
+  life: 4
   totalLife: 4
-  respawnPosition: {x: 0, y: -4.49, z: 97.5}
+  respawnPosition: {x: 0, y: 1, z: 0}
+  revivalAmount: 200

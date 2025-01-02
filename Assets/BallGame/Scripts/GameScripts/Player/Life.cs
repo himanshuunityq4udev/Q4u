@@ -39,7 +39,6 @@ public class Life : MonoBehaviour
                 isCollected = true;
                 ActionHelper.addLife.Invoke();
                 playerData.respawnPosition = transform.position;
-                //playerData.direction = transform.forward;
                 DisableAllChild(false);
 
         }
@@ -47,10 +46,10 @@ public class Life : MonoBehaviour
         {
             isCollected = true;
             playerData.respawnPosition = transform.position;
-             //playerData.direction = transform.forward;
             checkPointAnimator.enabled = true;
         }
     }
+
 
     private void DisableAllChild(bool value)
     {

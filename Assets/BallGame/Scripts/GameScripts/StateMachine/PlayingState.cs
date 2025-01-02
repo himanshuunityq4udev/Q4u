@@ -24,7 +24,7 @@ namespace state
             {
                 ballController.StateMachine.ChangeState(new WinState(ballController));
             }
-            else if (ballController.IsFallen())
+            else if (ballController.IsFallen() && !ballController.IsGrounded())
             {
                 ballController.LoseLife();
 

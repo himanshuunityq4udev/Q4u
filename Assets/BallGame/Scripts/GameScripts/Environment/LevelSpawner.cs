@@ -22,6 +22,7 @@ public class LevelSpawner : MonoBehaviour
     }
     public void SpawnLevel()
     {
+        Debug.Log("Current level" + PlayerPrefs.GetInt("PlayerLevel"));
 
         if (PlayerPrefs.GetInt("PlayerLevel") < Levles.Count)
         {
