@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
-
+using System.Collections;
 
 public class UiManager : MonoBehaviour
 {
@@ -63,12 +63,15 @@ public class UiManager : MonoBehaviour
         ActionHelper.LevelComplete += LevelComplete;
         ActionHelper.LevelFailed += LevelFailed;
         ActionHelper.DontHaveEnoughCoins += DontHaveEnoughCoins;
+        ActionHelper.Skip += Skip;
     }
     private void OnDisable()
     {
         ActionHelper.LevelComplete -= LevelComplete;
         ActionHelper.LevelFailed -= LevelFailed;
         ActionHelper.DontHaveEnoughCoins -= DontHaveEnoughCoins;
+        ActionHelper.Skip -= Skip;
+
 
     }
 
@@ -113,7 +116,7 @@ public class UiManager : MonoBehaviour
         menuController.PushPage(gamePage);
         removeAdsButton.SetActive(false);
         mainCoinButton.SetActive(false);
-        levelAnimator.enabled = true;
+        levelAnimator.SetTrigger("Level");
     }
 
     private void OnBallButtonClicked()
@@ -206,17 +209,21 @@ public class UiManager : MonoBehaviour
     private void LevelComplete()
     {
         menuController.PushPage(levelCompletePage);
-      
+        mainCoinButton.SetActive(true);
 
     }
     public void OnNextButtonClicked()
     {
-
-        ActionHelper.GenerateNewLevel?.Invoke();
-        menuController.PopPage();
+        ActionHelper.AnimateCoins?.Invoke();
     }
-   
 
+    private void Skip()
+    {
+        menuController.PopPage();
+        mainCoinButton.SetActive(false);
+        levelAnimator.SetTrigger("Level");
+    }
+    
 
 
 

@@ -113,11 +113,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ebe5e9b1d31445b3b4af0d6cc495c2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockObject: {fileID: 5711236287976666437, guid: 06bd3128383814a90b750bda496b9eda, type: 3}
-  maxWidth: 3
+  blockObject: {fileID: 2375024686638703607, guid: 8db26460d958b4e8e8262e2eb39a4ff7, type: 3}
   minWidth: 2
-  maxHeight: 4
+  maxWidth: 3
   minHeight: 1
+  maxHeight: 4
 --- !u!1 &6791205273493020809
 GameObject:
   m_ObjectHideFlags: 0
@@ -162,11 +162,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ebe5e9b1d31445b3b4af0d6cc495c2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockObject: {fileID: 5711236287976666437, guid: 06bd3128383814a90b750bda496b9eda, type: 3}
-  maxWidth: 3
+  blockObject: {fileID: 2375024686638703607, guid: 8db26460d958b4e8e8262e2eb39a4ff7, type: 3}
   minWidth: 2
-  maxHeight: 4
+  maxWidth: 3
   minHeight: 1
+  maxHeight: 4
 --- !u!1001 &666669788437809773
 PrefabInstance:
   m_ObjectHideFlags: 0

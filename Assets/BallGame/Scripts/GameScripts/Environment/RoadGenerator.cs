@@ -26,7 +26,7 @@ public class RoadGenerator : MonoBehaviour
         if (!canGenerate)
         {
             playerLevel = PlayerPrefs.GetInt("PlayerLevel", 1);
-            maxPlanks = PlayerPrefs.GetInt("MaxPlanks", maxPlanks);
+            //maxPlanks = PlayerPrefs.GetInt("MaxPlanks", maxPlanks);
         }
     }
 
@@ -204,6 +204,8 @@ public class RoadGenerator : MonoBehaviour
     {
         playerLevel++;
         PlayerPrefs.SetInt("PlayerLevel", playerLevel);
-        PlayerPrefs.SetInt("MaxPlanks", maxPlanks);
+        //PlayerPrefs.SetInt("MaxPlanks", maxPlanks);
+        playerLevel = PlayerPrefs.GetInt("PlayerLevel", 1);
+        levelText.text = $"LEVEL {playerLevel}";
     }
 }

@@ -7,6 +7,16 @@ public class LevelSpawner : MonoBehaviour
 
     public TMP_Dropdown dropdown;
     public bool isTestLevel = false;
+
+    private void OnEnable()
+    {
+        ActionHelper.GenerateNewLevel += SpawnLevel;
+
+    }
+    private void OnDisable()
+    {
+        ActionHelper.GenerateNewLevel -= SpawnLevel;
+    }
     private void Start()
     {
         if (!isTestLevel)
@@ -22,6 +32,11 @@ public class LevelSpawner : MonoBehaviour
     }
     public void SpawnLevel()
     {
+        if (transform.childCount > 0)
+        {
+            Destroy(transform.GetChild(0).gameObject);
+
+        }
         Debug.Log("Current level" + PlayerPrefs.GetInt("PlayerLevel"));
 
         if (PlayerPrefs.GetInt("PlayerLevel") < Levles.Count)
@@ -46,6 +61,6 @@ public class LevelSpawner : MonoBehaviour
 
        Instantiate(Levles[dropdown.value], transform);
 
-        ActionHelper.SpawnLife?.Invoke();
+       // ActionHelper.SpawnLife?.Invoke();
     }
 }

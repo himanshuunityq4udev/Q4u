@@ -23,13 +23,18 @@ public class ActionHelper : MonoBehaviour
     public static Action GoHome;
 
 
-    //DimandCollector script - coinmanager script
+    //Coins script - coinmanager script
     public static Action<int> AddNumberOfCoins;
 
     /// ______________UI__________________
 
-    //BallController script -> UIManager script,coinManager Script, RoadGenerator script
+    //BallController script -> UIManager script, RoadGenerator script
     public static Action LevelComplete;
+    //coinManager -> UI manager script
+    public static Action Skip;
+
+    //Ui manager script  ->CoinManager script
+    public static Action AnimateCoins;
 
     //BallController script -> UIManager script
     public static Action LevelFailed;
@@ -57,10 +62,9 @@ public class ActionHelper : MonoBehaviour
     //UIManager Script ->BallController Script
     public static Action ReviveLife;
 
-    //UImanager script  -> BallController script
+    //WinState script  -> BallController script,Level Spawner
     public static Action GenerateNewLevel;
-
-
+   
     //collisionHandler script -> audioManager;
     public static Action PlayHaptic;
 }

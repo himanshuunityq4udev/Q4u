@@ -15,6 +15,7 @@ namespace state
         {
             Debug.Log("You Win!");
             ballController.ShowWinScreen();
+            ActionHelper.GenerateNewLevel?.Invoke();
         }
 
         public void Execute() {

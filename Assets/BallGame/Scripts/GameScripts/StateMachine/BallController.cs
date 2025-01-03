@@ -96,11 +96,11 @@ namespace state
 
         private void GenerateNextLevel()
         {
-            isLevelComplete = false;
-            ActionHelper.GoHome?.Invoke();
+            //ActionHelper.GoHome?.Invoke();
             StateMachine.ChangeState(new RespawnState(this));
             playerInput.enabled = true;
             cam1.GetComponent<Animator>().enabled = false;
+            isLevelComplete = false;
         }
 
 
@@ -112,9 +112,11 @@ namespace state
                 transform.rotation = Quaternion.Euler(0, 0, 0);
                 rb.angularVelocity = Vector3.zero;
                 rb.linearVelocity = Vector3.zero;
+                rb.useGravity = false;
                 playerInput.enabled = false;
                 cam1.GetComponent<Animator>().enabled = true;
                 isLevelComplete = true;
+                playerData.respawnPosition = new Vector3(0, 1, 0);
             }
         }
 
@@ -127,6 +129,7 @@ namespace state
             rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
             transform.rotation = Quaternion.identity;
+            rb.useGravity = true;
             ResetCameraManually();
             Debug.Log("Respawned");
           

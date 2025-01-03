@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
 using System.Collections.Generic;
+using System.Collections;
 
 public class CoinsManager : MonoBehaviour
 {
@@ -33,19 +33,6 @@ public class CoinsManager : MonoBehaviour
 	private int collectedCoins = 0;
 
 
-	private int _c = 0;
-
-	public int Coins
-	{
-		get { return _c; }
-		set
-		{
-			_c = value;
-			//update UI text whenever "Coins" variable is changed
-			//coinUIText.text += Coins.ToString();
-		}
-	}
-
 	void Awake ()
 	{
 		targetPosition = target.position;
@@ -57,23 +44,22 @@ public class CoinsManager : MonoBehaviour
     private void OnEnable()
     {
         ActionHelper.OnMoneyChanged += UpdateMoneyUI; // Subscribe to the event
-		ActionHelper.LevelComplete += CollectedCoins;
+		ActionHelper.AnimateCoins += AnimateCoins;
 		ActionHelper.AddNumberOfCoins += AddCoins;
     }
 
     private void OnDisable()
     {
         ActionHelper.OnMoneyChanged -= UpdateMoneyUI; // Unsubscribe to avoid memory leaks
-        ActionHelper.LevelComplete -= CollectedCoins;
+        ActionHelper.AnimateCoins -= AnimateCoins;
         ActionHelper.AddNumberOfCoins -= AddCoins;
 
 
     }
 
-    private void UpdateMoneyUI(int newMoney)
+    private void UpdateMoneyUI(int newAmount)
     {
-        mainCoinUIText.text = newMoney.ToString();
-		
+        mainCoinUIText.text = newAmount.ToString();
     }
 
 
@@ -111,24 +97,31 @@ public class CoinsManager : MonoBehaviour
 					//executes whenever coin reach target position
 					coin.SetActive (false);
 					coinsQueue.Enqueue (coin);
-                    Coins++;
-                    //MoneyManager.Instance.AddMoney(1); // Add one coin to the saved data
                 });
 			}
 		}
        
     }
 
+	public void AnimateCoins()
+	{
+        Animate (spawnPos.position,(collectedCoins/7));
+		StartCoroutine(GenerateNewLevel());
+    }
+
+	IEnumerator GenerateNewLevel()
+	{
+        MoneyManager.Instance.AddMoney(collectedCoins);
+        yield return new WaitForSeconds(1.2f);
+		ActionHelper.Skip?.Invoke();
+
+    }
+
+
 	public void AddCoins (int amount)
 	{
 		collectedCoins += amount;
-        Animate (spawnPos.position, amount);
-	//	Debug.Log("Himanshu" + collectedCoins);
-    }
-
-	public void CollectedCoins()
-	{
-		coinUIText.text = collectedCoins.ToString();
-        MoneyManager.Instance.AddMoney(collectedCoins);
+        coinUIText.text = collectedCoins.ToString();
+        Debug.Log("Himanshu" + collectedCoins);
     }
 }
