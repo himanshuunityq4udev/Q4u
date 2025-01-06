@@ -60,11 +60,6 @@ public class BallsLifeManager : MonoBehaviour
        ActionHelper.updateLifeUI -= UpdateBallImage;
     }
 
-    private void Update()
-    {
-       
-    }
-
     /// <summary>
     /// Prepares the object pool for animating balls.
     /// </summary>
@@ -139,6 +134,10 @@ public class BallsLifeManager : MonoBehaviour
     public void AddLife()
     {
         Animate(spawnPos.position, 1);
+        if(playerData.life <= playerData.totalLife)
+        {
+            ActionHelper.NeedLifeBall?.Invoke();
+        }
     }
 
       /// <summary>

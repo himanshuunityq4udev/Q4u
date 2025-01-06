@@ -5,7 +5,7 @@ using TMPro;
 
 public class RoadGenerator : MonoBehaviour
 {
-    [SerializeField] private TMP_Text levelText;          // Text to display the current level
+//    [SerializeField] private TMP_Text levelText;          // Text to display the current level
     [SerializeField] private Transform startPlankPosition; // Start position for the road
     [SerializeField] private List<GameObject> plainPlanks; // List of plain planks
     [SerializeField] private List<GameObject> coinPlanks;  // List of planks with coins
@@ -15,38 +15,17 @@ public class RoadGenerator : MonoBehaviour
     [SerializeField] private int minPlanks = 10;           // Minimum planks in a road
     [SerializeField] private int maxPlanks = 20;           // Maximum planks in a road
 
-    private int playerLevel = 1;                          // Current player level
+    private int Level = 1;                          // Current player level
     private Transform currentEndTransform;                // Tracks the end position and rotation
 
     public bool canGenerate = false;
 
-
-    private void Awake()
-    {
-        if (!canGenerate)
-        {
-            playerLevel = PlayerPrefs.GetInt("PlayerLevel", 1);
-            //maxPlanks = PlayerPrefs.GetInt("MaxPlanks", maxPlanks);
-        }
-    }
-
     private void Start()
     {
-        levelText.text = $"LEVEL {playerLevel}";
         if (canGenerate)
         {
             GenerateRoad();
         }
-    }
-
-    private void OnEnable()
-    {
-        ActionHelper.LevelComplete += IncreasePlayerLevel;
-    }
-
-    private void OnDisable()
-    {
-        ActionHelper.LevelComplete -= IncreasePlayerLevel;
     }
 
     [ContextMenu("Generate")]
@@ -61,7 +40,7 @@ public class RoadGenerator : MonoBehaviour
         }
 
         // Adjust max planks based on player level
-        maxPlanks = Mathf.Clamp(maxPlanks + (playerLevel / 10), minPlanks, 50);
+        maxPlanks = Mathf.Clamp(maxPlanks + (Level / 10), minPlanks, 50);
 
         // Generate road
         if (startPlankPrefab) PlacePlank(startPlankPrefab);
@@ -198,14 +177,5 @@ public class RoadGenerator : MonoBehaviour
             return null;
         }
         return planks[Random.Range(0, planks.Count)];
-    }
-
-    public void IncreasePlayerLevel()
-    {
-        playerLevel++;
-        PlayerPrefs.SetInt("PlayerLevel", playerLevel);
-        //PlayerPrefs.SetInt("MaxPlanks", maxPlanks);
-        playerLevel = PlayerPrefs.GetInt("PlayerLevel", 1);
-        levelText.text = $"LEVEL {playerLevel}";
     }
 }

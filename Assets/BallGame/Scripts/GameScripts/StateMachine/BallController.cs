@@ -77,6 +77,10 @@ namespace state
         public void LoseLife()
         {
             playerData.life--;
+            if (playerData.life <= playerData.totalLife)
+            {
+                ActionHelper.NeedLifeBall?.Invoke();
+            }
             ActionHelper.updateLifeUI?.Invoke();
             Debug.Log("Lives remaining: " + playerData.life);
         }

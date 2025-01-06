@@ -56,6 +56,7 @@ public class UiManager : MonoBehaviour
     [SerializeField] GameObject ballCam;
     [SerializeField] GameObject skyCam;
     [SerializeField] Animator levelAnimator;
+    [SerializeField] Animator checkpointAnimator;
 
 
     private void OnEnable()
@@ -64,6 +65,7 @@ public class UiManager : MonoBehaviour
         ActionHelper.LevelFailed += LevelFailed;
         ActionHelper.DontHaveEnoughCoins += DontHaveEnoughCoins;
         ActionHelper.Skip += Skip;
+        ActionHelper.CheckPoint += PlayCheckpointAnimation;
     }
     private void OnDisable()
     {
@@ -71,6 +73,8 @@ public class UiManager : MonoBehaviour
         ActionHelper.LevelFailed -= LevelFailed;
         ActionHelper.DontHaveEnoughCoins -= DontHaveEnoughCoins;
         ActionHelper.Skip -= Skip;
+        ActionHelper.CheckPoint -= PlayCheckpointAnimation;
+
 
 
     }
@@ -259,6 +263,9 @@ public class UiManager : MonoBehaviour
     {
         menuController.PushPage(dontHaveEnoughCoinPage);
     }
-
+    private void PlayCheckpointAnimation()
+    {
+        checkpointAnimator.SetTrigger("CheckPoint");
+    }
 
 }

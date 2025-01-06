@@ -18,10 +18,13 @@ namespace state
             ActionHelper.GenerateNewLevel?.Invoke();
         }
 
-        public void Execute() {
-
+        public void Execute()
+        {
+            
         }
 
-        public void Exit() { }
+        public void Exit()
+        {
+        }
     }
 }

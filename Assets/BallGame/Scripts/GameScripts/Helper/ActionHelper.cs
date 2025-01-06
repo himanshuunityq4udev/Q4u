@@ -17,7 +17,8 @@ public class ActionHelper : MonoBehaviour
 
     //RoadGenerator script -> lifeSpawnManager Script
     public static Action SpawnLife;
-
+    //Ball lifeManager,BallController ->Life script
+    public static Action NeedLifeBall;
 
     //UiManager script, Ball controller -> LevelLoader script
     public static Action GoHome;
@@ -67,4 +68,7 @@ public class ActionHelper : MonoBehaviour
    
     //collisionHandler script -> audioManager;
     public static Action PlayHaptic;
+
+    // -> Lifescript
+    public static Action CheckPoint;
 }

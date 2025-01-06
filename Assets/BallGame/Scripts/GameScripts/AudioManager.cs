@@ -196,6 +196,7 @@ public class AudioManager : MonoBehaviour
         if (GetPlayHaptic())
         {
             HapticFeedback.MediumFeedback();
+            Debug.Log("Haptic is called");
         }
     }
 

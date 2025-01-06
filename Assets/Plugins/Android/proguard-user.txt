@@ -1,0 +1,1 @@
+-keep class com.candycoded.hapticfeedbacklibrary.AndroidPlugin { *; }

@@ -26,7 +26,8 @@ namespace state
             }
         }
 
-        public void Exit() {
+        public void Exit()
+        {
 
         }
     }

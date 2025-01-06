@@ -3,33 +3,39 @@ using UnityEngine;
 public class Life : MonoBehaviour
 {
    [SerializeField] PlayerData playerData;
-   [SerializeField] Animator checkPointAnimator;
 
     public bool isCollected;
     public bool IsCollected => isCollected;
 
-    private void Start()
+    private void OnEnable()
     {
-        checkPointAnimator = GetComponentInParent<Animator>();
+        ActionHelper.NeedLifeBall += EnablelifeBall;
     }
 
+    private void OnDisable()
+    {
+        ActionHelper.NeedLifeBall -= EnablelifeBall;
+    }
 
     private void Update()
     {
-        if (playerData.life < playerData.totalLife && !isCollected)
-        {
-            for (int j = 0; j < transform.childCount; j++)
-            {
-                transform.GetChild(j).gameObject.SetActive(j == PlayerPrefs.GetInt("CurrentBall"));
-            }
-
-        }
         if (playerData.life == playerData.totalLife && (isCollected | !isCollected))
         {
             DisableAllChild(false);
         }
     }
 
+
+    public void EnablelifeBall()
+    {
+        if(!isCollected)
+        {
+            for (int j = 0; j < transform.childCount; j++)
+            {
+                transform.GetChild(j).gameObject.SetActive(j == PlayerPrefs.GetInt("CurrentBall"));
+            }
+        }
+    }
 
 
     private void OnTriggerEnter(Collider other)
@@ -46,7 +52,8 @@ public class Life : MonoBehaviour
         {
             isCollected = true;
             playerData.respawnPosition = transform.position;
-            checkPointAnimator.enabled = true;
+            //TODO call animation checkpoint
+            ActionHelper.CheckPoint?.Invoke();
         }
     }
 
