@@ -493,7 +493,7 @@
     "m_ObjectId": "00eac0cff52346509bf0fe6c9a2d2160",
     "m_Title": "Rotation",
     "m_Position": {
-        "x": -929.5000610351563,
+        "x": -929.4999389648438,
         "y": 184.5
     }
 }
@@ -1456,7 +1456,7 @@
     "hlslDeclarationOverride": 0,
     "m_Hidden": false,
     "m_Value": {
-        "m_SerializedTexture": "{\"texture\":{\"fileID\":2800000,\"guid\":\"fbf081fbe09ee4caf8b0b5d34ce9828f\",\"type\":3}}",
+        "m_SerializedTexture": "",
         "m_Guid": ""
     },
     "isMainTexture": false,
@@ -1554,8 +1554,8 @@
     "m_ObjectId": "69ac356538ea4f11880fd1f4b294260d",
     "m_Title": "Shiny Line",
     "m_Position": {
-        "x": -76.50006103515625,
-        "y": 177.50001525878907
+        "x": -76.5,
+        "y": 177.49998474121095
     }
 }
 
@@ -2083,7 +2083,7 @@
     "m_Title": "Flash",
     "m_Position": {
         "x": -21.0,
-        "y": 517.0000610351563
+        "y": 517.0
     }
 }
 
@@ -2798,7 +2798,7 @@
     "m_ObjectId": "d0601cfaf91c4428b36f0e4decdad1bd",
     "m_Title": "CycleTime",
     "m_Position": {
-        "x": -770.0000610351563,
+        "x": -769.9999389648438,
         "y": 486.4999694824219
     }
 }

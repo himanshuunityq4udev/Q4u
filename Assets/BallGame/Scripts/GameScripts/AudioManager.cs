@@ -129,11 +129,12 @@ public class AudioManager : MonoBehaviour
 
     public void CloseSettings()
     {
+        SaveSettings();
         // Revert to the last saved state
-        tempHapticState = GetPlayHaptic();
-        tempMusicState = GetPlayMusic();
-        tempSFXState = GetPlaySFX();
-        UpdateButtonStates();
+        //tempHapticState = GetPlayHaptic();
+        //tempMusicState = GetPlayMusic();
+        //tempSFXState = GetPlaySFX();
+        //UpdateButtonStates();
 
     }
 

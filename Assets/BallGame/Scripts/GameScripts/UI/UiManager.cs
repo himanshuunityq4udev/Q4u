@@ -22,6 +22,10 @@ public class UiManager : MonoBehaviour
     [SerializeField] private Button SkySelectionButton;
     [SerializeField] private Button FreeCoinButton;
     [SerializeField] private Button StoreButton;
+    [SerializeField] private Button PrivacyPolicyButton;
+    [SerializeField] private Button MoreGamesButton;
+
+
 
     //SelectButton BallSelection Page
     [SerializeField] private Button BallSelcetButton;
@@ -81,7 +85,7 @@ public class UiManager : MonoBehaviour
 
     private void Start()
     {
-        //------Main Menu---------
+        //------ Main Menu---------
         PlayButton.onClick.AddListener(OnPlayButtonClicked);
         BallSelectionButton.onClick.AddListener(OnBallButtonClicked);
         SkySelectionButton.onClick.AddListener(OnWorldButtonClicked);
@@ -90,11 +94,15 @@ public class UiManager : MonoBehaviour
         SettingsButton.onClick.AddListener(OnSettingsButtonClicked);
         // ===== End =========
 
-        //-------Ball Selection -----
+        //------ Settings panel -----
+        //PrivacyPolicyButton.onClick.AddListener(OnPrivacyPolicyButtonClicked);
+        //MoreGamesButton.onClick.AddListener(OnMoreGamesButtonClicked);
+
+        //------- Ball Selection -----
         BallSelcetButton.onClick.AddListener(OnBallSelectButtonClicked);
         BallUnlockButton.onClick.AddListener(OnBallUnlockButtonClicked);
 
-        //-------Sky Selection -----
+        //------- Sky Selection -----
         SkySelcetButton.onClick.AddListener(OnSkySelectButtonClicked);
         SkyUnlockButton.onClick.AddListener(OnSkyUnlockButtonClicked);
         BackButton.onClick.AddListener(OnBackButtonClicked);
@@ -104,11 +112,11 @@ public class UiManager : MonoBehaviour
         HomeButton1.onClick.AddListener(OnHomeButtonClicked);
 
 
-        //--------Revive Life --------
+        //-------- Revive Life --------
         ReviveLifeButton.onClick.AddListener(OnReviveLifeButtonClicked);
         HomeButton2.onClick.AddListener(OnHomeButtonClicked);
 
-        //Next Level
+        //------- Next Level -------
         NextButton.onClick.AddListener(OnNextButtonClicked);
 
     }
@@ -118,8 +126,8 @@ public class UiManager : MonoBehaviour
     private void OnPlayButtonClicked()
     {
         menuController.PushPage(gamePage);
-        removeAdsButton.SetActive(false);
-        mainCoinButton.SetActive(false);
+        AddButtonShowOrHide(false);
+        CoinButtonShowOrHide(false);
         levelAnimator.SetTrigger("Level");
     }
 
@@ -127,14 +135,14 @@ public class UiManager : MonoBehaviour
     {
         menuController.PushPage(ballSelectionPage);
         ballCam.SetActive(true);
-        backButton.SetActive(true);
+        BackButtonShowOrHide(true);
     }
 
     private void OnWorldButtonClicked()
     {
         menuController.PushPage(skySelectionPage);
         skyCam.SetActive(true);
-        backButton.SetActive(true);
+        BackButtonShowOrHide(true);
     }
 
     public void OnSettingsButtonClicked()
@@ -152,11 +160,20 @@ public class UiManager : MonoBehaviour
 
     }
 
+    public void OnPrivacyPolicyButtonClicked()
+    {
+
+    }
+
+    public void OnMoreGamesButtonClicked()
+    {
+
+    }
     public void OnMainMenuOpen()
     {
-        backButton.SetActive(false);
-        removeAdsButton.SetActive(true);
-        mainCoinButton.SetActive(true);
+        BackButtonShowOrHide(false);
+        AddButtonShowOrHide(true);
+        CoinButtonShowOrHide(true);
     }
 
     #endregion
@@ -166,7 +183,7 @@ public class UiManager : MonoBehaviour
     private void OnBallSelectButtonClicked()
     {
         menuController.PopPage();
-        backButton.SetActive(false);
+        BackButtonShowOrHide(false);
         ballCam.SetActive(false);
         ActionHelper.SelectBall?.Invoke();
     }
@@ -196,7 +213,7 @@ public class UiManager : MonoBehaviour
     private void OnSkySelectButtonClicked()
     {
         menuController.PopPage();
-        backButton.SetActive(false);
+        BackButtonShowOrHide(false);
         skyCam.SetActive(false);
         ActionHelper.SelectSky?.Invoke();
     }
@@ -266,6 +283,19 @@ public class UiManager : MonoBehaviour
     private void PlayCheckpointAnimation()
     {
         checkpointAnimator.SetTrigger("CheckPoint");
+    }
+
+    private void AddButtonShowOrHide(bool value)
+    {
+        removeAdsButton.SetActive(value);
+    }
+    private void CoinButtonShowOrHide(bool value)
+    {
+        mainCoinButton.SetActive(value);
+    }
+    private void BackButtonShowOrHide(bool value)
+    {
+        backButton.SetActive(value);
     }
 
 }
